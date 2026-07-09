@@ -1780,7 +1780,8 @@ h3 {
 
 .ward-display .metric p {
   letter-spacing: 0;
-  white-space: nowrap;
+  line-height: 1.08;
+  white-space: normal;
 }
 
 .ward-display .glass-key-button.primary-action,
