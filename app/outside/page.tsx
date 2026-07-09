@@ -35,7 +35,7 @@ const outsideCopy: Record<
 > = {
   english: {
     eyebrow: "Outside ward display",
-    heading: "Hi, this is Labour Room. What can I help?",
+    heading: "Hello, this is Labour Room (Ward B4).",
     ready: "Ready",
     readyTitle: "Select an enquiry type to begin.",
     readyBody: "This is the screen visitors see outside the ward.",
