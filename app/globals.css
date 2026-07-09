@@ -1422,3 +1422,63 @@ h3 {
     flex-direction: column;
   }
 }
+
+.outside-display .display-topbar {
+  min-height: auto;
+  padding: clamp(22px, 3vw, 36px);
+}
+
+.outside-display .display-topbar h1 {
+  font-size: clamp(1.8rem, 2.5vw, 2.8rem);
+  line-height: 1.05;
+}
+
+.outside-display .visitor-layout {
+  grid-template-columns: 1fr;
+}
+
+.outside-display .visitor-copy {
+  padding: clamp(18px, 2vw, 26px);
+}
+
+.outside-display .visitor-confirmation {
+  margin-top: 18px;
+  padding: 18px 22px;
+}
+
+.outside-display .visitor-confirmation strong {
+  font-size: clamp(1.5rem, 2.2vw, 2.2rem);
+  margin-bottom: 0;
+}
+
+.outside-display .request-grid.outside-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.outside-display .request-card {
+  min-height: clamp(150px, 17vw, 210px);
+  padding: clamp(18px, 2vw, 26px);
+}
+
+.outside-display .request-title {
+  font-size: clamp(1.8rem, 2.5vw, 2.8rem);
+  margin-bottom: 12px;
+}
+
+.outside-display .request-helper {
+  font-size: clamp(0.98rem, 1.25vw, 1.2rem);
+  line-height: 1.28;
+}
+
+.outside-display .request-card::after {
+  bottom: 18px;
+  height: 9px;
+  left: 24px;
+  width: 58px;
+}
+
+@media (max-width: 760px) {
+  .outside-display .request-grid.outside-grid {
+    grid-template-columns: 1fr;
+  }
+}

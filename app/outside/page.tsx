@@ -173,7 +173,11 @@ export default function OutsideDisplay() {
   }
 
   const copy = outsideCopy[selectedLanguage];
-  const confirmation = lastRequest ? copy.options[lastRequest.kind].confirmation : null;
+  const sentMessage = lastRequest
+    ? lastRequest.kind === "urgent"
+      ? "Urgent Alert Sent. Please wait."
+      : "Enquiry Sent. Please wait."
+    : null;
 
   return (
     <main className="display-shell outside-display">
@@ -200,9 +204,7 @@ export default function OutsideDisplay() {
           </div>
           {lastRequest ? (
             <div className={`visitor-confirmation ${lastRequest.kind}`} role="status">
-              <span>{copy.alertSent}</span>
-              <strong>{confirmation}</strong>
-              <p>{copy.stayClose}</p>
+              <strong>{sentMessage}</strong>
             </div>
           ) : (
             <div className="visitor-confirmation empty">
