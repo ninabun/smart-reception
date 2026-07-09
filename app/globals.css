@@ -272,12 +272,12 @@ button {
   padding: 22px;
 }
 
-.visitor-confirmation.general,
-.visitor-confirmation.patient {
+.visitor-confirmation.general {
   background: #e7f1ff;
   border-color: #81b7ff;
 }
 
+.visitor-confirmation.patient,
 .visitor-confirmation.clinical {
   background: #e5f6ef;
   border-color: #80c9ad;
@@ -322,12 +322,12 @@ button {
   position: relative;
 }
 
-.ward-alert.general,
-.ward-alert.patient {
+.ward-alert.general {
   background: #e7f1ff;
   border-color: #81b7ff;
 }
 
+.ward-alert.patient,
 .ward-alert.clinical {
   background: #e5f6ef;
   border-color: #80c9ad;
@@ -380,12 +380,12 @@ button {
   padding: 22px;
 }
 
-.queue-row.general,
-.queue-row.patient {
+.queue-row.general {
   border-left: 5px solid var(--blue);
   padding-left: 12px;
 }
 
+.queue-row.patient,
 .queue-row.clinical {
   border-left: 5px solid var(--green);
   padding-left: 12px;
@@ -551,6 +551,10 @@ h3 {
   border-left-color: var(--green);
 }
 
+.request-card.patient {
+  border-left-color: var(--green);
+}
+
 .request-card.urgent {
   border-left-color: var(--red);
 }
@@ -601,14 +605,14 @@ h3 {
 }
 
 .beacon.general,
-.beacon.patient,
-.active-alert.general,
-.active-alert.patient {
+.active-alert.general {
   background: #e7f1ff;
   border-color: #81b7ff;
 }
 
+.beacon.patient,
 .beacon.clinical,
+.active-alert.patient,
 .active-alert.clinical {
   background: #e5f6ef;
   border-color: #80c9ad;
@@ -620,11 +624,11 @@ h3 {
   border-color: #ef9488;
 }
 
-.beacon.general,
-.beacon.patient {
+.beacon.general {
   box-shadow: 0 0 0 8px rgba(36, 107, 203, 0.14);
 }
 
+.beacon.patient,
 .beacon.clinical {
   box-shadow: 0 0 0 8px rgba(22, 128, 90, 0.14);
 }

@@ -37,7 +37,7 @@ export const requestOptions: Array<
     helper: "Request Permission / Find the Right Room / Where to Wait",
     confirmation: "A clerk will help with patient accompaniment guidance.",
     team: "Clerk",
-    color: "Blue",
+    color: "Green",
     tone: "Accompaniment alert",
     priority: "Standard"
   },
