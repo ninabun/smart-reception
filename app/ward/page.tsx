@@ -239,12 +239,10 @@ export default function WardDisplay() {
               <h2>{copy.request[activeRequest.kind]}</h2>
               {activeRequest.kind === "urgent" ? (
                 <p>Notify Healthcare Providers IMMEDIATELY.</p>
+              ) : activeRequest.kind === "patient" ? (
+                <p>Notify Midwife.</p>
               ) : (
-                <p>
-                  {copy.notify} {copy.team[activeRequest.team] ?? activeRequest.team}. {copy.trigger}{" "}
-                  {activeRequest.color.toLowerCase()} {copy.indicator} {copy.play}{" "}
-                  {activeRequest.tone.toLowerCase()}.
-                </p>
+                <p>Notify Clerk.</p>
               )}
               <div className="alert-meta">
                 <span>{activeRequest.createdAt}</span>
