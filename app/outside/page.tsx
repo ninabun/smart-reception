@@ -210,7 +210,6 @@ export default function OutsideDisplay() {
             <div className="visitor-confirmation empty">
               <span>{copy.ready}</span>
               <strong>{copy.readyTitle}</strong>
-              <p>{copy.readyBody}</p>
             </div>
           )}
         </div>
