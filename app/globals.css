@@ -1646,6 +1646,30 @@ h3 {
   padding: 18px;
 }
 
+.ward-display .queue {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-color: rgba(29, 29, 31, 0.24) transparent;
+  scrollbar-width: thin;
+}
+
+.ward-display .queue::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ward-display .queue::-webkit-scrollbar-thumb {
+  background: rgba(29, 29, 31, 0.22);
+  border-radius: 999px;
+}
+
+.ward-display .queue::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 .ward-display .metric-grid {
   gap: 8px;
   margin-bottom: 16px;
