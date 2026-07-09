@@ -1693,3 +1693,68 @@ h3 {
     min-height: auto;
   }
 }
+
+.ward-display .display-topbar,
+.ward-display .ward-alert,
+.ward-display .ward-sidebar {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.78)),
+    rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.ward-display .ward-alert.urgent {
+  background:
+    radial-gradient(circle at 86% 8%, rgba(255, 68, 99, 0.15), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 248, 251, 0.82));
+}
+
+.ward-display .primary-action {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(235, 242, 255, 0.62)),
+    rgba(232, 241, 255, 0.72);
+  border-color: rgba(92, 144, 255, 0.38);
+  color: #243142;
+}
+
+.ward-display .metric {
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.88),
+    0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.ward-display .metric-today {
+  background:
+    linear-gradient(145deg, rgba(227, 241, 255, 0.96), rgba(188, 221, 255, 0.9)),
+    rgba(221, 236, 255, 0.94);
+}
+
+.ward-display .metric-waiting {
+  background:
+    linear-gradient(145deg, rgba(226, 249, 239, 0.98), rgba(177, 231, 205, 0.92)),
+    rgba(219, 246, 235, 0.96);
+}
+
+.ward-display .metric-high {
+  background:
+    linear-gradient(145deg, rgba(255, 240, 244, 0.98), rgba(255, 211, 222, 0.92)),
+    rgba(255, 236, 241, 0.96);
+}
+
+.ward-display .metric-today span,
+.ward-display .metric-today p {
+  color: #0754b8;
+  font-weight: 950;
+}
+
+.ward-display .metric-waiting span,
+.ward-display .metric-waiting p {
+  color: #087a52;
+  font-weight: 950;
+}
+
+.ward-display .metric p {
+  letter-spacing: 0;
+  white-space: nowrap;
+}
