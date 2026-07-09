@@ -157,13 +157,15 @@ button {
   border: 1px solid var(--line);
   border-radius: 8px;
   box-shadow: var(--shadow);
+  justify-content: center;
   padding: 28px;
+  text-align: center;
 }
 
 .outside-display .display-topbar h1 {
   font-size: clamp(2.4rem, 4.8vw, 5.6rem);
   line-height: 1;
-  max-width: 940px;
+  max-width: 1060px;
 }
 
 .outside-status {

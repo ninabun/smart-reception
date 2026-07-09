@@ -55,11 +55,10 @@ export const requestOptions: Array<
 
 export const languageOptions = [
   { id: "english", label: "English" },
-  { id: "cantonese", label: "廣東話" },
-  { id: "mandarin", label: "普通話" },
+  { id: "chinese", label: "中文" },
   { id: "hindi", label: "हिन्दी" },
   { id: "urdu", label: "اردو" }
-];
+] as const;
 
 export function getTodayKey(date = new Date()) {
   const year = date.getFullYear();
