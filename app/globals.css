@@ -319,13 +319,6 @@ button {
   align-items: center;
 }
 
-.ward-location {
-  color: var(--ink);
-  font-size: clamp(1.1rem, 1.5vw, 1.45rem);
-  font-weight: 850;
-  margin: 14px 0 0;
-}
-
 .ward-language-row {
   display: flex;
   gap: 8px;
@@ -417,9 +410,9 @@ button {
   width: 100%;
 }
 
-.high-priority-metric span,
-.high-priority-metric p {
-  color: var(--red);
+.metric-today p,
+.metric-waiting p {
+  font-weight: 900;
 }
 
 .metric em {
@@ -754,6 +747,12 @@ h3 {
   color: var(--muted);
   font-size: 0.8rem;
   margin: 4px 0 0;
+}
+
+.high-priority-metric span,
+.high-priority-metric p,
+.high-priority-metric em {
+  color: var(--red);
 }
 
 .queue-row {

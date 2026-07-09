@@ -42,8 +42,8 @@ const wardCopy: Record<
   english: {
     languageLabel: "English",
     eyebrow: "Inside ward display",
-    title: "Labour room alert station",
-    location: "Location: Labour Room",
+    title: "Location : Labour Room",
+    location: "Location : Labour Room",
     outsideDisplay: "Open Outside Display",
     resetDemo: "Reset Demo",
     priority: {
@@ -85,7 +85,7 @@ const wardCopy: Record<
   chinese: {
     languageLabel: "中文",
     eyebrow: "產房內顯示屏",
-    title: "產房提示站",
+    title: "位置：產房",
     location: "位置：產房",
     outsideDisplay: "開啟外面顯示屏",
     resetDemo: "重設示範",
@@ -204,7 +204,6 @@ export default function WardDisplay() {
         <div>
           <p className="eyebrow">{copy.eyebrow}</p>
           <h1>{copy.title}</h1>
-          <p className="ward-location">{copy.location}</p>
         </div>
         <div className="topbar-actions">
           <div className="ward-language-row" aria-label="Ward language selection">
@@ -268,7 +267,12 @@ export default function WardDisplay() {
         <aside className="ward-sidebar">
           <div className="metric-grid">
             {metrics.map((metric) => (
-              <div className={metric.id === "high" ? "metric high-priority-metric" : "metric"} key={metric.id}>
+              <div
+                className={`metric metric-${metric.id}${
+                  metric.id === "high" ? " high-priority-metric" : ""
+                }`}
+                key={metric.id}
+              >
                 <span>{metric.value}</span>
                 <p>{metric.label}</p>
                 <em>{metric.hint}</em>
