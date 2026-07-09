@@ -224,10 +224,14 @@ button {
 }
 
 .outside-display .language-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-bottom: 4px;
 }
 
 .outside-display .language {
+  justify-content: center;
+  min-width: 0;
   background: #ffffff;
   border-color: var(--line);
   color: var(--ink);
@@ -1481,4 +1485,15 @@ h3 {
   .outside-display .request-grid.outside-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.outside-display .language-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.outside-display .language {
+  justify-content: center;
+  min-width: 0;
+  width: 100%;
 }
