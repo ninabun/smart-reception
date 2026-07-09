@@ -1782,3 +1782,8 @@ h3 {
   letter-spacing: 0;
   white-space: nowrap;
 }
+
+.ward-display .glass-key-button.primary-action,
+.ward-display .glass-key-button.primary-action .glass-key-content {
+  color: #5f6368;
+}
