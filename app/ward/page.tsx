@@ -207,6 +207,9 @@ export default function WardDisplay() {
           <h1>{copy.title}</h1>
         </div>
         <div className="topbar-actions">
+          <Link className="screen-link" href="/outside">
+            {copy.outsideDisplay}
+          </Link>
           <div className="ward-language-row" aria-label="Ward language selection">
             {(Object.keys(wardCopy) as WardLanguage[]).map((language) => (
               <GlassKeyButton
@@ -219,9 +222,6 @@ export default function WardDisplay() {
               </GlassKeyButton>
             ))}
           </div>
-          <Link className="screen-link" href="/outside">
-            {copy.outsideDisplay}
-          </Link>
         </div>
       </header>
 

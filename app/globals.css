@@ -1526,7 +1526,10 @@ h3 {
 }
 
 .ward-display .topbar-actions {
+  align-items: flex-end;
+  flex-direction: column;
   flex-wrap: nowrap;
+  gap: 10px;
   max-width: none;
 }
 
@@ -1538,6 +1541,27 @@ h3 {
   white-space: nowrap;
 }
 
+.ward-display .screen-link {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(245, 249, 255, 0.7)),
+    rgba(255, 255, 255, 0.72);
+  border-color: rgba(0, 113, 227, 0.2);
+  color: #0b63ce;
+  font-weight: 850;
+  min-width: 212px;
+}
+
+.ward-display .ward-language-row {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(86px, 1fr));
+}
+
+.ward-display .ward-language-row .language {
+  justify-content: center;
+  width: 100%;
+}
+
 .ward-display .ward-layout {
   gap: 16px;
   grid-template-columns: minmax(0, 1fr) minmax(300px, 0.34fr);
@@ -1546,7 +1570,7 @@ h3 {
 
 .ward-display .ward-alert,
 .ward-display .ward-sidebar {
-  min-height: calc(100svh - 154px);
+  min-height: calc(100svh - 198px);
 }
 
 .ward-display .ward-alert {
@@ -1655,6 +1679,7 @@ h3 {
   }
 
   .ward-display .topbar-actions {
+    align-items: flex-start;
     justify-content: flex-start;
   }
 
