@@ -1356,3 +1356,69 @@ h3 {
     min-height: 220px;
   }
 }
+
+.ward-display .display-topbar h1 {
+  font-size: clamp(2.8rem, 5vw, 5.6rem);
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.ward-alert h2 {
+  font-size: clamp(3rem, 6vw, 6.4rem);
+  max-width: calc(100% - 64px);
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.ward-alert p:not(.eyebrow) {
+  font-size: clamp(1.05rem, 1.7vw, 1.65rem);
+  max-width: min(760px, 100%);
+  overflow-wrap: anywhere;
+}
+
+.ward-display .topbar-actions {
+  justify-content: flex-end;
+  max-width: 44%;
+}
+
+.ward-language-row {
+  justify-content: flex-end;
+}
+
+.ward-sidebar {
+  min-width: 0;
+}
+
+.ward-sidebar .metric-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.ward-sidebar .metric {
+  min-width: 0;
+}
+
+.ward-sidebar .metric span {
+  font-size: clamp(1.45rem, 2vw, 2.15rem);
+}
+
+.ward-sidebar .metric p,
+.ward-sidebar .metric em {
+  overflow-wrap: anywhere;
+}
+
+.queue-row strong,
+.queue-row em,
+.queue-row span {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1180px) {
+  .ward-display .topbar-actions {
+    max-width: 100%;
+  }
+
+  .ward-display .display-topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
