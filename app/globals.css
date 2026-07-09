@@ -1615,6 +1615,12 @@ h3 {
   font-size: 0.78rem;
 }
 
+.ward-display .high-priority-metric span,
+.ward-display .high-priority-metric p {
+  color: var(--red);
+  font-weight: 950;
+}
+
 .ward-display .metric em {
   font-size: 0.66rem;
 }
