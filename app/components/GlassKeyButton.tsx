@@ -7,6 +7,7 @@ import type { Mesh } from "three";
 
 type GlassKeyButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   children: ReactNode;
+  showScene?: boolean;
   tone?: "blue" | "green" | "red" | "neutral";
 };
 
@@ -65,17 +66,20 @@ function KeyScene({ tone }: { tone: NonNullable<GlassKeyButtonProps["tone"]> }) 
 export default function GlassKeyButton({
   children,
   className = "",
+  showScene = true,
   tone = "neutral",
   type = "button",
   ...props
 }: GlassKeyButtonProps) {
   return (
     <button className={`glass-key-button ${className}`} type={type} {...props}>
-      <span className="glass-key-canvas" aria-hidden="true">
-        <Canvas camera={{ fov: 36, position: [0, 0, 4.4] }} dpr={[1, 1.5]} gl={{ alpha: true }}>
-          <KeyScene tone={tone} />
-        </Canvas>
-      </span>
+      {showScene ? (
+        <span className="glass-key-canvas" aria-hidden="true">
+          <Canvas camera={{ fov: 36, position: [0, 0, 4.4] }} dpr={[1, 1.5]} gl={{ alpha: true }}>
+            <KeyScene tone={tone} />
+          </Canvas>
+        </span>
+      ) : null}
       <span className="glass-key-content">{children}</span>
     </button>
   );

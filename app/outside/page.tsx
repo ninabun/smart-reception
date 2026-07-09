@@ -219,6 +219,7 @@ export default function OutsideDisplay() {
               className={`request-card ${option.kind}`}
               key={option.kind}
               onClick={() => submitRequest(option)}
+              showScene={false}
               tone={option.kind === "urgent" ? "red" : option.kind === "patient" ? "green" : "blue"}
             >
               <span className="request-title">{copy.options[option.kind].label}</span>
