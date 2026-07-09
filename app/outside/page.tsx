@@ -9,6 +9,7 @@ import {
   saveRequests,
   type ReceptionRequest
 } from "../reception-data";
+import GlassKeyButton from "../components/GlassKeyButton";
 
 type LanguageId = (typeof languageOptions)[number]["id"];
 
@@ -187,14 +188,14 @@ export default function OutsideDisplay() {
         <div className="visitor-copy">
           <div className="language-row" aria-label="Language selection">
             {languageOptions.map((language) => (
-              <button
+              <GlassKeyButton
                 className={selectedLanguage === language.id ? "language active" : "language"}
                 key={language.id}
                 onClick={() => setSelectedLanguage(language.id)}
-                type="button"
+                tone="neutral"
               >
                 {language.label}
-              </button>
+              </GlassKeyButton>
             ))}
           </div>
           {lastRequest ? (
@@ -214,15 +215,15 @@ export default function OutsideDisplay() {
 
         <div className="request-grid outside-grid">
           {requestOptions.map((option) => (
-            <button
+            <GlassKeyButton
               className={`request-card ${option.kind}`}
               key={option.kind}
               onClick={() => submitRequest(option)}
-              type="button"
+              tone={option.kind === "urgent" ? "red" : option.kind === "patient" ? "green" : "blue"}
             >
               <span className="request-title">{copy.options[option.kind].label}</span>
               <span className="request-helper">{copy.options[option.kind].helper}</span>
-            </button>
+            </GlassKeyButton>
           ))}
         </div>
       </section>

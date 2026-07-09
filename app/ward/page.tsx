@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { filterTodayRequests, readRequests, saveRequests, type ReceptionRequest } from "../reception-data";
+import GlassKeyButton from "../components/GlassKeyButton";
 
 type WardLanguage = "english" | "chinese";
 
@@ -208,14 +209,14 @@ export default function WardDisplay() {
         <div className="topbar-actions">
           <div className="ward-language-row" aria-label="Ward language selection">
             {(Object.keys(wardCopy) as WardLanguage[]).map((language) => (
-              <button
+              <GlassKeyButton
                 className={selectedLanguage === language ? "language active" : "language"}
                 key={language}
                 onClick={() => setSelectedLanguage(language)}
-                type="button"
+                tone="neutral"
               >
                 {wardCopy[language].languageLabel}
-              </button>
+              </GlassKeyButton>
             ))}
           </div>
           <Link className="screen-link" href="/outside">
@@ -246,13 +247,13 @@ export default function WardDisplay() {
                 <span>{copy.status[activeRequest.status]}</span>
               </div>
               {activeRequest.status === "Waiting" ? (
-                <button
+                <GlassKeyButton
                   className="primary-action"
                   onClick={() => updateRequest(activeRequest.id, "Acknowledged")}
-                  type="button"
+                  tone={activeRequest.kind === "urgent" ? "red" : activeRequest.kind === "patient" ? "green" : "blue"}
                 >
                   {copy.acknowledge}
-                </button>
+                </GlassKeyButton>
               ) : null}
             </>
           ) : (
@@ -297,9 +298,13 @@ export default function WardDisplay() {
             )}
           </div>
 
-          <button className="secondary-action reset-panel-action" onClick={clearDemo} type="button">
+          <GlassKeyButton
+            className="secondary-action reset-panel-action"
+            onClick={clearDemo}
+            tone="neutral"
+          >
             {copy.resetDemo}
-          </button>
+          </GlassKeyButton>
         </aside>
       </section>
     </main>
