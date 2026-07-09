@@ -1313,6 +1313,39 @@ h3 {
   min-height: 22px;
 }
 
+.outside-display .glass-key-button.request-card.general {
+  background:
+    linear-gradient(145deg, rgba(26, 127, 235, 0.92), rgba(176, 225, 248, 0.88) 48%, rgba(34, 120, 226, 0.72)),
+    radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.82), transparent 26%);
+  border-color: rgba(180, 228, 255, 0.9);
+}
+
+.outside-display .glass-key-button.request-card.patient {
+  background:
+    linear-gradient(145deg, rgba(112, 216, 226, 0.9), rgba(203, 244, 248, 0.9) 48%, rgba(48, 153, 165, 0.76)),
+    radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.82), transparent 28%);
+  border-color: rgba(190, 244, 247, 0.92);
+}
+
+.outside-display .glass-key-button.request-card.urgent {
+  background:
+    linear-gradient(145deg, rgba(255, 216, 234, 0.96), rgba(246, 239, 249, 0.94) 45%, rgba(229, 164, 194, 0.72)),
+    radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.88), transparent 30%);
+  border-color: rgba(255, 225, 239, 0.95);
+}
+
+.outside-display .glass-key-button.request-card.general .request-title,
+.outside-display .glass-key-button.request-card.general .request-helper,
+.outside-display .glass-key-button.request-card.patient .request-title,
+.outside-display .glass-key-button.request-card.patient .request-helper {
+  color: #062342;
+}
+
+.outside-display .glass-key-button.request-card.urgent .request-title,
+.outside-display .glass-key-button.request-card.urgent .request-helper {
+  color: #432333;
+}
+
 @media (max-width: 980px) {
   .outside-display .display-topbar,
   .ward-display .display-topbar {
