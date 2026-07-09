@@ -2,11 +2,19 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { readRequests, requestOptions, saveRequests, type ReceptionRequest } from "../reception-data";
+import {
+  filterTodayRequests,
+  getTodayKey,
+  languageOptions,
+  readRequests,
+  requestOptions,
+  saveRequests,
+  type ReceptionRequest
+} from "../reception-data";
 
 export default function OutsideDisplay() {
   const [requests, setRequests] = useState<ReceptionRequest[]>([]);
-  const [selectedLanguage, setSelectedLanguage] = useState("English");
+  const [selectedLanguage, setSelectedLanguage] = useState("english");
   const [lastRequest, setLastRequest] = useState<ReceptionRequest | null>(null);
 
   useEffect(() => {
@@ -23,6 +31,7 @@ export default function OutsideDisplay() {
       tone: option.tone,
       priority: option.priority,
       status: "Waiting",
+      createdDate: getTodayKey(),
       createdAt: new Intl.DateTimeFormat("en", {
         hour: "2-digit",
         minute: "2-digit",
@@ -39,34 +48,36 @@ export default function OutsideDisplay() {
   const confirmation = lastRequest
     ? requestOptions.find((option) => option.kind === lastRequest.kind)?.confirmation
     : null;
+  const todayRequests = filterTodayRequests(requests);
 
   return (
     <main className="display-shell outside-display">
       <header className="display-topbar">
         <div>
           <p className="eyebrow">Outside ward display</p>
-          <h1>Hi, what can I help with?</h1>
+          <h1>Hi, this is Labour Room. What can I help?</h1>
         </div>
-        <Link className="screen-link" href="/ward">
-          Open Ward Display
-        </Link>
+        <div className="outside-status">
+          <span>{String(todayRequests.length).padStart(2, "0")}</span>
+          <p>Requests today</p>
+          <Link className="screen-link" href="/ward">
+            Ward Display
+          </Link>
+        </div>
       </header>
 
       <section className="visitor-layout">
         <div className="visitor-copy">
-          <p>
-            Please choose the closest option. The request will appear on the ward display with the
-            correct colour, team, and alert type.
-          </p>
+          <p>Please choose the closest option.</p>
           <div className="language-row" aria-label="Language selection">
-            {["English", "Cantonese", "Mandarin", "Tagalog", "Hindi", "Urdu"].map((language) => (
+            {languageOptions.map((language) => (
               <button
-                className={selectedLanguage === language ? "language active" : "language"}
-                key={language}
-                onClick={() => setSelectedLanguage(language)}
+                className={selectedLanguage === language.id ? "language active" : "language"}
+                key={language.id}
+                onClick={() => setSelectedLanguage(language.id)}
                 type="button"
               >
-                {language}
+                {language.label}
               </button>
             ))}
           </div>
@@ -74,7 +85,7 @@ export default function OutsideDisplay() {
             <div className={`visitor-confirmation ${lastRequest.kind}`} role="status">
               <span>{lastRequest.color} alert sent</span>
               <strong>{confirmation}</strong>
-              <p>Request routed to: {lastRequest.team}</p>
+              <p>Please stay close to the reception area.</p>
             </div>
           ) : (
             <div className="visitor-confirmation empty">
@@ -95,9 +106,6 @@ export default function OutsideDisplay() {
             >
               <span className="request-title">{option.label}</span>
               <span className="request-helper">{option.helper}</span>
-              <span className="request-route">
-                {option.color} indicator to {option.team}
-              </span>
             </button>
           ))}
         </div>

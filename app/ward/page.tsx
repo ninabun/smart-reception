@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { readRequests, saveRequests, type ReceptionRequest } from "../reception-data";
+import { filterTodayRequests, readRequests, saveRequests, type ReceptionRequest } from "../reception-data";
 
 export default function WardDisplay() {
   const [requests, setRequests] = useState<ReceptionRequest[]>([]);
@@ -22,21 +22,23 @@ export default function WardDisplay() {
     };
   }, []);
 
-  const activeRequest = requests.find((request) => request.status === "Waiting") ?? requests[0];
+  const todayRequests = useMemo(() => filterTodayRequests(requests), [requests]);
+  const activeRequest =
+    todayRequests.find((request) => request.status === "Waiting") ?? todayRequests[0];
 
   const metrics = useMemo(
     () => [
-      { label: "Requests today", value: String(requests.length).padStart(2, "0") },
+      { label: "Requests today", value: String(todayRequests.length).padStart(2, "0") },
       {
         label: "Waiting",
-        value: String(requests.filter((request) => request.status === "Waiting").length).padStart(2, "0")
+        value: String(todayRequests.filter((request) => request.status === "Waiting").length).padStart(2, "0")
       },
       {
         label: "High priority",
-        value: String(requests.filter((request) => request.priority === "High").length).padStart(2, "0")
+        value: String(todayRequests.filter((request) => request.priority === "High").length).padStart(2, "0")
       }
     ],
-    [requests]
+    [todayRequests]
   );
 
   function updateRequest(id: number, status: ReceptionRequest["status"]) {
@@ -116,10 +118,10 @@ export default function WardDisplay() {
 
           <div className="queue">
             <h3>Live queue</h3>
-            {requests.length === 0 ? (
+            {todayRequests.length === 0 ? (
               <p className="muted">No workflow events yet.</p>
             ) : (
-              requests.map((request) => (
+              todayRequests.map((request) => (
                 <div className={`queue-row ${request.kind}`} key={request.id}>
                   <span>{request.createdAt}</span>
                   <strong>{request.label}</strong>

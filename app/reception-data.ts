@@ -1,4 +1,4 @@
-export type RequestKind = "general" | "patient" | "clinical" | "urgent";
+export type RequestKind = "general" | "patient" | "urgent";
 
 export type ReceptionRequest = {
   id: number;
@@ -9,18 +9,22 @@ export type ReceptionRequest = {
   tone: string;
   priority: "Standard" | "High";
   createdAt: string;
+  createdDate: string;
   status: "Waiting" | "Acknowledged";
 };
 
 export const storageKey = "smart-reception-requests";
 
 export const requestOptions: Array<
-  Omit<ReceptionRequest, "id" | "createdAt" | "status"> & { helper: string; confirmation: string }
+  Omit<ReceptionRequest, "id" | "createdAt" | "createdDate" | "status"> & {
+    helper: string;
+    confirmation: string;
+  }
 > = [
   {
     kind: "general",
     label: "General Enquiry",
-    helper: "Registration, documents, waiting guidance, or visiting information.",
+    helper: "Delivery / Documentations / CSD",
     confirmation: "A clerk has been notified. Please wait nearby.",
     team: "Clerk",
     color: "Blue",
@@ -30,7 +34,7 @@ export const requestOptions: Array<
   {
     kind: "patient",
     label: "Accompany Patient",
-    helper: "Request permission, find the right room, or ask where to wait.",
+    helper: "Request Permission / Find the Right Room / Where to Wait",
     confirmation: "A clerk will help with patient accompaniment guidance.",
     team: "Clerk",
     color: "Blue",
@@ -38,19 +42,9 @@ export const requestOptions: Array<
     priority: "Standard"
   },
   {
-    kind: "clinical",
-    label: "Need Healthcare Assistance",
-    helper: "Symptoms, discomfort, or help needed from clinical staff.",
-    confirmation: "A nurse has been notified. Please remain available.",
-    team: "Nurse",
-    color: "Green",
-    tone: "Nurse alert",
-    priority: "Standard"
-  },
-  {
     kind: "urgent",
-    label: "Urgent Assistance",
-    helper: "Immediate concern that should be escalated to healthcare providers.",
+    label: "Urgent Assistant",
+    helper: "Labour Symptoms, Discomfort, Help from Clinical Staff",
     confirmation: "Urgent alert sent. Clinical staff have been notified immediately.",
     team: "Healthcare Provider",
     color: "Red",
@@ -58,6 +52,28 @@ export const requestOptions: Array<
     priority: "High"
   }
 ];
+
+export const languageOptions = [
+  { id: "english", label: "English" },
+  { id: "cantonese", label: "廣東話" },
+  { id: "mandarin", label: "普通話" },
+  { id: "hindi", label: "हिन्दी" },
+  { id: "urdu", label: "اردو" }
+];
+
+export function getTodayKey(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+export function filterTodayRequests(requests: ReceptionRequest[]) {
+  const todayKey = getTodayKey();
+
+  return requests.filter((request) => request.createdDate === todayKey);
+}
 
 export function readRequests() {
   if (typeof window === "undefined") {
