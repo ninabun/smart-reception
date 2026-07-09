@@ -222,9 +222,6 @@ export default function WardDisplay() {
           <Link className="screen-link" href="/outside">
             {copy.outsideDisplay}
           </Link>
-          <button className="secondary-action" onClick={clearDemo} type="button">
-            {copy.resetDemo}
-          </button>
         </div>
       </header>
 
@@ -295,6 +292,10 @@ export default function WardDisplay() {
               ))
             )}
           </div>
+
+          <button className="secondary-action reset-panel-action" onClick={clearDemo} type="button">
+            {copy.resetDemo}
+          </button>
         </aside>
       </section>
     </main>

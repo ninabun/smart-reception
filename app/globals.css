@@ -406,7 +406,15 @@ button {
 
 .ward-sidebar {
   align-self: start;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 176px);
   padding: 22px;
+}
+
+.reset-panel-action {
+  margin-top: auto;
+  width: 100%;
 }
 
 .high-priority-metric span,
