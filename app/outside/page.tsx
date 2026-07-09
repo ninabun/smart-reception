@@ -54,7 +54,7 @@ const outsideCopy: Record<
       },
       urgent: {
         label: "Urgent Assistant",
-        helper: "Labour Symptoms, Discomfort, Need urgent help from Clinical Staff",
+        helper: "Labour Symptoms / Discomfort / Need Urgent Help from Clinical Staff",
         confirmation: "Urgent alert sent. Clinical staff have been notified immediately."
       }
     }
