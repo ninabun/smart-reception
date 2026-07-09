@@ -315,6 +315,22 @@ button {
   grid-template-columns: minmax(0, 1fr) minmax(330px, 0.42fr);
 }
 
+.ward-display .display-topbar {
+  align-items: center;
+}
+
+.ward-location {
+  color: var(--ink);
+  font-size: clamp(1.1rem, 1.5vw, 1.45rem);
+  font-weight: 850;
+  margin: 14px 0 0;
+}
+
+.ward-language-row {
+  display: flex;
+  gap: 8px;
+}
+
 .ward-alert {
   min-height: calc(100vh - 176px);
   overflow: hidden;
@@ -346,6 +362,15 @@ button {
   width: 34px;
 }
 
+.ward-alert .beacon.off {
+  background: #c8d0d9;
+  box-shadow: 0 0 0 8px rgba(184, 198, 214, 0.18);
+}
+
+.ward-alert .beacon.on {
+  animation: pulse-alert 1.35s ease-in-out infinite;
+}
+
 .ward-alert h2 {
   font-size: clamp(3rem, 7vw, 7.4rem);
   letter-spacing: 0;
@@ -359,6 +384,10 @@ button {
   font-size: clamp(1.25rem, 2vw, 2rem);
   line-height: 1.35;
   max-width: 780px;
+}
+
+.priority-high {
+  color: var(--red);
 }
 
 .alert-meta {
@@ -378,6 +407,31 @@ button {
 .ward-sidebar {
   align-self: start;
   padding: 22px;
+}
+
+.high-priority-metric span,
+.high-priority-metric p {
+  color: var(--red);
+}
+
+.metric em {
+  color: var(--muted);
+  display: block;
+  font-size: 0.72rem;
+  font-style: normal;
+  line-height: 1.25;
+  margin-top: 6px;
+}
+
+@keyframes pulse-alert {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.12);
+  }
 }
 
 .queue-row.general {

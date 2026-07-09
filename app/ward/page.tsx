@@ -4,8 +4,132 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { filterTodayRequests, readRequests, saveRequests, type ReceptionRequest } from "../reception-data";
 
+type WardLanguage = "english" | "chinese";
+
+const wardCopy: Record<
+  WardLanguage,
+  {
+    languageLabel: string;
+    eyebrow: string;
+    title: string;
+    location: string;
+    outsideDisplay: string;
+    resetDemo: string;
+    priority: Record<ReceptionRequest["priority"], string>;
+    ready: string;
+    noActive: string;
+    noActiveBody: string;
+    notify: string;
+    trigger: string;
+    indicator: string;
+    play: string;
+    acknowledge: string;
+    queue: string;
+    noEvents: string;
+    status: Record<ReceptionRequest["status"], string>;
+    team: Record<string, string>;
+    request: Record<ReceptionRequest["kind"], string>;
+    metrics: {
+      requestsToday: string;
+      requestsTodayHint: string;
+      waiting: string;
+      waitingHint: string;
+      highPriority: string;
+      highPriorityHint: string;
+    };
+  }
+> = {
+  english: {
+    languageLabel: "English",
+    eyebrow: "Inside ward display",
+    title: "Labour room alert station",
+    location: "Location: Labour Room",
+    outsideDisplay: "Open Outside Display",
+    resetDemo: "Reset Demo",
+    priority: {
+      Standard: "Standard priority",
+      High: "High priority"
+    },
+    ready: "Ready",
+    noActive: "No active request",
+    noActiveBody: "Visitor enquiries from the outside display will appear here.",
+    notify: "Notify",
+    trigger: "Trigger",
+    indicator: "indicator",
+    play: "and play",
+    acknowledge: "Acknowledge Request",
+    queue: "Live queue",
+    noEvents: "No workflow events yet.",
+    status: {
+      Waiting: "Not yet acknowledged",
+      Acknowledged: "Acknowledged"
+    },
+    team: {
+      Clerk: "Clerk",
+      "Healthcare Provider": "Healthcare Provider"
+    },
+    request: {
+      general: "General Enquiry",
+      patient: "Accompany Patient",
+      urgent: "Urgent Assistant"
+    },
+    metrics: {
+      requestsToday: "Requests today",
+      requestsTodayHint: "0:00am to 11:59pm every day",
+      waiting: "Waiting",
+      waitingHint: "Not yet acknowledged",
+      highPriority: "High Priority",
+      highPriorityHint: "Urgent Assistant from outside panel"
+    }
+  },
+  chinese: {
+    languageLabel: "中文",
+    eyebrow: "產房內顯示屏",
+    title: "產房提示站",
+    location: "位置：產房",
+    outsideDisplay: "開啟外面顯示屏",
+    resetDemo: "重設示範",
+    priority: {
+      Standard: "一般優先",
+      High: "高優先"
+    },
+    ready: "準備就緒",
+    noActive: "沒有待處理要求",
+    noActiveBody: "訪客在外面顯示屏提交的查詢會在這裡顯示。",
+    notify: "通知",
+    trigger: "啟動",
+    indicator: "指示燈",
+    play: "並播放",
+    acknowledge: "確認已處理",
+    queue: "即時隊列",
+    noEvents: "暫時沒有流程紀錄。",
+    status: {
+      Waiting: "尚未確認",
+      Acknowledged: "已確認"
+    },
+    team: {
+      Clerk: "文員",
+      "Healthcare Provider": "醫護人員"
+    },
+    request: {
+      general: "一般查詢",
+      patient: "陪同病人",
+      urgent: "緊急協助"
+    },
+    metrics: {
+      requestsToday: "今日要求",
+      requestsTodayHint: "每日 0:00am 至 11:59pm",
+      waiting: "等候中",
+      waitingHint: "尚未確認",
+      highPriority: "高優先",
+      highPriorityHint: "外面顯示屏按下緊急協助"
+    }
+  }
+};
+
 export default function WardDisplay() {
   const [requests, setRequests] = useState<ReceptionRequest[]>([]);
+  const [selectedLanguage, setSelectedLanguage] = useState<WardLanguage>("english");
 
   useEffect(() => {
     function refreshRequests() {
@@ -23,22 +147,41 @@ export default function WardDisplay() {
   }, []);
 
   const todayRequests = useMemo(() => filterTodayRequests(requests), [requests]);
+  const waitingRequests = useMemo(
+    () => todayRequests.filter((request) => request.status === "Waiting"),
+    [todayRequests]
+  );
+  const highPriorityRequests = useMemo(
+    () => todayRequests.filter((request) => request.kind === "urgent"),
+    [todayRequests]
+  );
+  const copy = wardCopy[selectedLanguage];
+  const hasWaitingRequests = waitingRequests.length > 0;
   const activeRequest =
-    todayRequests.find((request) => request.status === "Waiting") ?? todayRequests[0];
+    waitingRequests[0] ?? todayRequests[0];
 
   const metrics = useMemo(
     () => [
-      { label: "Requests today", value: String(todayRequests.length).padStart(2, "0") },
       {
-        label: "Waiting",
-        value: String(todayRequests.filter((request) => request.status === "Waiting").length).padStart(2, "0")
+        id: "today",
+        label: copy.metrics.requestsToday,
+        hint: copy.metrics.requestsTodayHint,
+        value: String(todayRequests.length).padStart(2, "0")
       },
       {
-        label: "High priority",
-        value: String(todayRequests.filter((request) => request.priority === "High").length).padStart(2, "0")
+        id: "waiting",
+        label: copy.metrics.waiting,
+        hint: copy.metrics.waitingHint,
+        value: String(waitingRequests.length).padStart(2, "0")
+      },
+      {
+        id: "high",
+        label: copy.metrics.highPriority,
+        hint: copy.metrics.highPriorityHint,
+        value: String(highPriorityRequests.length).padStart(2, "0")
       }
     ],
-    [todayRequests]
+    [copy, todayRequests.length, waitingRequests.length, highPriorityRequests.length]
   );
 
   function updateRequest(id: number, status: ReceptionRequest["status"]) {
@@ -59,33 +202,52 @@ export default function WardDisplay() {
     <main className="display-shell ward-display">
       <header className="display-topbar">
         <div>
-          <p className="eyebrow">Inside ward display</p>
-          <h1>Labour room alert station</h1>
+          <p className="eyebrow">{copy.eyebrow}</p>
+          <h1>{copy.title}</h1>
+          <p className="ward-location">{copy.location}</p>
         </div>
         <div className="topbar-actions">
+          <div className="ward-language-row" aria-label="Ward language selection">
+            {(Object.keys(wardCopy) as WardLanguage[]).map((language) => (
+              <button
+                className={selectedLanguage === language ? "language active" : "language"}
+                key={language}
+                onClick={() => setSelectedLanguage(language)}
+                type="button"
+              >
+                {wardCopy[language].languageLabel}
+              </button>
+            ))}
+          </div>
           <Link className="screen-link" href="/outside">
-            Open Outside Display
+            {copy.outsideDisplay}
           </Link>
           <button className="secondary-action" onClick={clearDemo} type="button">
-            Reset Demo
+            {copy.resetDemo}
           </button>
         </div>
       </header>
 
       <section className="ward-layout">
         <div className={activeRequest ? `ward-alert ${activeRequest.kind}` : "ward-alert empty"}>
-          <span className={activeRequest ? `beacon ${activeRequest.kind}` : "beacon"} />
+          <span
+            aria-label={hasWaitingRequests ? "Unacknowledged request light on" : "Request light off"}
+            className={hasWaitingRequests ? `beacon ${activeRequest?.kind ?? ""} on` : "beacon off"}
+          />
           {activeRequest ? (
             <>
-              <p className="eyebrow">{activeRequest.priority} priority</p>
-              <h2>{activeRequest.label}</h2>
+              <p className={activeRequest.priority === "High" ? "eyebrow priority-high" : "eyebrow"}>
+                {copy.priority[activeRequest.priority]}
+              </p>
+              <h2>{copy.request[activeRequest.kind]}</h2>
               <p>
-                Notify {activeRequest.team}. Trigger {activeRequest.color.toLowerCase()} indicator
-                and play {activeRequest.tone.toLowerCase()}.
+                {copy.notify} {copy.team[activeRequest.team] ?? activeRequest.team}. {copy.trigger}{" "}
+                {activeRequest.color.toLowerCase()} {copy.indicator} {copy.play}{" "}
+                {activeRequest.tone.toLowerCase()}.
               </p>
               <div className="alert-meta">
                 <span>{activeRequest.createdAt}</span>
-                <span>{activeRequest.status}</span>
+                <span>{copy.status[activeRequest.status]}</span>
               </div>
               {activeRequest.status === "Waiting" ? (
                 <button
@@ -93,15 +255,15 @@ export default function WardDisplay() {
                   onClick={() => updateRequest(activeRequest.id, "Acknowledged")}
                   type="button"
                 >
-                  Acknowledge Request
+                  {copy.acknowledge}
                 </button>
               ) : null}
             </>
           ) : (
             <>
-              <p className="eyebrow">Ready</p>
-              <h2>No active request</h2>
-              <p>Visitor enquiries from the outside display will appear here.</p>
+              <p className="eyebrow">{copy.ready}</p>
+              <h2>{copy.noActive}</h2>
+              <p>{copy.noActiveBody}</p>
             </>
           )}
         </div>
@@ -109,24 +271,25 @@ export default function WardDisplay() {
         <aside className="ward-sidebar">
           <div className="metric-grid">
             {metrics.map((metric) => (
-              <div className="metric" key={metric.label}>
+              <div className={metric.id === "high" ? "metric high-priority-metric" : "metric"} key={metric.id}>
                 <span>{metric.value}</span>
                 <p>{metric.label}</p>
+                <em>{metric.hint}</em>
               </div>
             ))}
           </div>
 
           <div className="queue">
-            <h3>Live queue</h3>
+            <h3>{copy.queue}</h3>
             {todayRequests.length === 0 ? (
-              <p className="muted">No workflow events yet.</p>
+              <p className="muted">{copy.noEvents}</p>
             ) : (
               todayRequests.map((request) => (
                 <div className={`queue-row ${request.kind}`} key={request.id}>
                   <span>{request.createdAt}</span>
-                  <strong>{request.label}</strong>
+                  <strong>{copy.request[request.kind]}</strong>
                   <em>
-                    {request.team} - {request.status}
+                    {copy.team[request.team] ?? request.team} - {copy.status[request.status]}
                   </em>
                 </div>
               ))
