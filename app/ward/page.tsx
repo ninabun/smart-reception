@@ -237,11 +237,15 @@ export default function WardDisplay() {
                 {copy.priority[activeRequest.priority]}
               </p>
               <h2>{copy.request[activeRequest.kind]}</h2>
-              <p>
-                {copy.notify} {copy.team[activeRequest.team] ?? activeRequest.team}. {copy.trigger}{" "}
-                {activeRequest.color.toLowerCase()} {copy.indicator} {copy.play}{" "}
-                {activeRequest.tone.toLowerCase()}.
-              </p>
+              {activeRequest.kind === "urgent" ? (
+                <p>Notify Healthcare Providers IMMEDIATELY.</p>
+              ) : (
+                <p>
+                  {copy.notify} {copy.team[activeRequest.team] ?? activeRequest.team}. {copy.trigger}{" "}
+                  {activeRequest.color.toLowerCase()} {copy.indicator} {copy.play}{" "}
+                  {activeRequest.tone.toLowerCase()}.
+                </p>
+              )}
               <div className="alert-meta">
                 <span>{activeRequest.createdAt}</span>
                 <span>{copy.status[activeRequest.status]}</span>
