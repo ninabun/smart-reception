@@ -2484,3 +2484,58 @@ h3 {
     width: 100%;
   }
 }
+
+.outside-display .display-topbar {
+  max-width: 1380px;
+  width: 100%;
+}
+
+.outside-display .visitor-layout {
+  max-width: 1380px;
+}
+
+.confirm-request-action {
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  min-height: 76px;
+  min-width: 240px;
+  padding: 20px 34px;
+  text-transform: uppercase;
+}
+
+.confirm-request-action .glass-key-content {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.ward-display .alert-meta .status-acknowledged {
+  background:
+    linear-gradient(145deg, #fff8d6, #ffd85a),
+    #ffe99b;
+  color: #5f4300;
+}
+
+.ward-display .queue-row.acknowledged {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(246, 248, 251, 0.78)),
+    rgba(255, 255, 255, 0.78);
+  border-color: rgba(120, 130, 145, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.86);
+}
+
+.ward-display .queue-title {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ward-display .queue-ack-time {
+  color: #5f4300;
+  font-size: 0.86rem;
+  font-weight: 950;
+}
+
+.ward-display .queue-row.acknowledged .queue-ack-time {
+  color: #5f4300;
+}

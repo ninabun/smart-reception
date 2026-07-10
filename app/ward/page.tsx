@@ -345,13 +345,15 @@ export default function WardDisplay() {
                   type="button"
                 >
                   <span className="queue-time">{request.createdAt}</span>
-                  <strong className="queue-title">{copy.request[request.kind]}</strong>
+                  <strong className="queue-title">
+                    {copy.request[request.kind]}
+                    {request.status === "Acknowledged" && request.acknowledgedAt ? (
+                      <span className="queue-ack-time">({request.acknowledgedAt})</span>
+                    ) : null}
+                  </strong>
                   {requestMeta(request) ? <small className="queue-meta">{requestMeta(request)}</small> : null}
                   <em className="queue-status">
                     {copy.team[request.team] ?? request.team} - {copy.status[request.status]}
-                    {request.status === "Acknowledged" && request.acknowledgedAt
-                      ? ` (${request.acknowledgedAt})`
-                      : ""}
                     {request.status === "Cancelled" && request.cancelledAt
                       ? ` (${request.cancelledAt})`
                       : ""}

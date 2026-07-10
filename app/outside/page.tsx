@@ -260,6 +260,21 @@ export default function OutsideDisplay() {
           )}
         </div>
 
+        <div className="request-grid outside-grid">
+          {requestOptions.map((option) => (
+            <GlassKeyButton
+              className={`request-card ${option.kind}${selectedKind === option.kind ? " selected" : ""}`}
+              key={option.kind}
+              onClick={() => setSelectedKind(option.kind)}
+              showScene={false}
+              tone={option.kind === "urgent" ? "red" : option.kind === "patient" ? "green" : "blue"}
+            >
+              <span className="request-title">{copy.options[option.kind].label}</span>
+              <span className="request-helper">{copy.options[option.kind].helper}</span>
+            </GlassKeyButton>
+          ))}
+        </div>
+
         <div className="outside-choice-panel" aria-label="Location and visitor count">
           {(["E2", "A11"] as ReceptionLocation[]).map((location) => (
             <div
@@ -296,21 +311,6 @@ export default function OutsideDisplay() {
                 ))}
               </div>
             </div>
-          ))}
-        </div>
-
-        <div className="request-grid outside-grid">
-          {requestOptions.map((option) => (
-            <GlassKeyButton
-              className={`request-card ${option.kind}${selectedKind === option.kind ? " selected" : ""}`}
-              key={option.kind}
-              onClick={() => setSelectedKind(option.kind)}
-              showScene={false}
-              tone={option.kind === "urgent" ? "red" : option.kind === "patient" ? "green" : "blue"}
-            >
-              <span className="request-title">{copy.options[option.kind].label}</span>
-              <span className="request-helper">{copy.options[option.kind].helper}</span>
-            </GlassKeyButton>
           ))}
         </div>
 
