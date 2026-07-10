@@ -2737,3 +2737,84 @@ h3 {
   min-height: clamp(58px, 6vw, 78px);
   padding: 14px 18px;
 }
+
+.ward-display .ward-alert.general .alert-meta span:first-child {
+  background:
+    linear-gradient(145deg, #e8f3ff 0%, #b9dcff 100%),
+    #d9edff;
+  border-color: rgba(0, 113, 227, 0.22);
+  color: #0754b8;
+}
+
+.ward-display .ward-alert.general .status-pill {
+  background:
+    linear-gradient(145deg, #d6ebff 0%, #6bb6ff 100%),
+    #a8d4ff;
+  border-color: rgba(0, 82, 170, 0.32);
+  color: #06386f;
+}
+
+.ward-display .ward-alert.general .primary-action {
+  background:
+    linear-gradient(145deg, #0a84ff 0%, #0066d6 100%);
+  border-color: rgba(0, 82, 170, 0.4);
+}
+
+.ward-display .ward-alert.general .primary-action,
+.ward-display .ward-alert.general .primary-action .glass-key-content {
+  color: #ffffff;
+}
+
+.ward-display .ward-alert.patient .alert-meta span:first-child {
+  background:
+    linear-gradient(145deg, #e4fff5 0%, #a9ead0 100%),
+    #d7f8e9;
+  border-color: rgba(8, 122, 82, 0.2);
+  color: #087a52;
+}
+
+.ward-display .ward-alert.patient .status-pill {
+  background:
+    linear-gradient(145deg, #c9f7e3 0%, #38c48b 100%),
+    #8de5bd;
+  border-color: rgba(8, 122, 82, 0.32);
+  color: #064931;
+}
+
+.ward-display .ward-alert.patient .primary-action {
+  background:
+    linear-gradient(145deg, #20c883 0%, #087a52 100%);
+  border-color: rgba(8, 122, 82, 0.42);
+}
+
+.ward-display .ward-alert.patient .primary-action,
+.ward-display .ward-alert.patient .primary-action .glass-key-content {
+  color: #ffffff;
+}
+
+.ward-display .ward-alert.urgent .alert-meta span:first-child {
+  background:
+    linear-gradient(145deg, #fff0f4 0%, #ffc7d6 100%),
+    #ffe5ec;
+  border-color: rgba(190, 42, 42, 0.2);
+  color: #be2a2a;
+}
+
+.ward-display .ward-alert.urgent .status-pill {
+  background:
+    linear-gradient(145deg, #ffd8e2 0%, #ff4d70 100%),
+    #ff9db1;
+  border-color: rgba(190, 42, 42, 0.36);
+  color: #5e0718;
+}
+
+.ward-display .ward-alert.urgent .primary-action {
+  background:
+    linear-gradient(145deg, #ff4d70 0%, #be2a2a 100%);
+  border-color: rgba(190, 42, 42, 0.42);
+}
+
+.ward-display .ward-alert.urgent .primary-action,
+.ward-display .ward-alert.urgent .primary-action .glass-key-content {
+  color: #ffffff;
+}
