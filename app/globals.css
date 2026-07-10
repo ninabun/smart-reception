@@ -3368,6 +3368,12 @@ h3 {
   text-transform: uppercase;
 }
 
+.outside-display .confirm-main-copy .sent-message-text {
+  font-size: clamp(1.65rem, 2.6vw, 2.45rem);
+  font-weight: 1000;
+  line-height: 1.05;
+}
+
 .outside-display .confirm-request-action {
   align-self: end;
 }
