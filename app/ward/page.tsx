@@ -344,11 +344,11 @@ export default function WardDisplay() {
                   onClick={() => setSelectedRequestId(request.id)}
                   type="button"
                 >
-                  <span className="queue-time">{request.createdAt}</span>
+                  <span className="queue-time">{request.createdAt} (Request Time)</span>
                   <strong className="queue-title">
                     {copy.request[request.kind]}
                     {request.status === "Acknowledged" && request.acknowledgedAt ? (
-                      <span className="queue-ack-time">({request.acknowledgedAt})</span>
+                      <span className="queue-ack-time">{request.acknowledgedAt} (Acknowledge Time)</span>
                     ) : null}
                   </strong>
                   {requestMeta(request) ? <small className="queue-meta">{requestMeta(request)}</small> : null}
