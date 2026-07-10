@@ -315,7 +315,6 @@ export default function OutsideDisplay() {
 
   const copy = outsideCopy[selectedLanguage];
   const actions = actionCopy[selectedLanguage];
-  const sentMessage = lastRequest ? actions.sentMessage[lastRequest.kind] : null;
   const selectedOption = requestOptions.find((option) => option.kind === selectedKind);
   const readyToConfirm = Boolean(selectedOption || (selectedLocation && visitorCount));
   const selectedLocationLabel =
@@ -353,18 +352,6 @@ export default function OutsideDisplay() {
               </GlassKeyButton>
             ))}
           </div>
-          {lastRequest ? (
-            <div className={`visitor-confirmation ${lastRequest.kind}`} role="status">
-              <strong>{sentMessage}</strong>
-              {lastRequest.status === "Waiting" ? (
-                <button className="cancel-request-action" onClick={cancelLastRequest} type="button">
-                  {actions.cancelButton}
-                </button>
-              ) : (
-                <span className="cancelled-note">Cancelled</span>
-              )}
-            </div>
-          ) : null}
         </div>
 
         <div className="request-grid outside-grid">
