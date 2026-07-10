@@ -3350,3 +3350,27 @@ h3 {
   border-color: rgba(139, 0, 0, 0.24);
   color: #8b0000;
 }
+
+.outside-display .confirm-request-action,
+.outside-display .outside-cancel-action {
+  border: 2px solid rgba(120, 130, 145, 0.46);
+  height: clamp(70px, 6vw, 84px);
+  justify-self: end;
+  width: clamp(178px, 15vw, 230px);
+}
+
+.outside-display .confirm-request-action {
+  align-self: end;
+}
+
+.outside-display .sent-followup {
+  justify-self: end;
+}
+
+.outside-display .outside-cancel-action {
+  align-self: start;
+}
+
+.outside-display .cancel-sent-action {
+  border-color: rgba(120, 130, 145, 0.46);
+}
