@@ -221,6 +221,18 @@ export default function OutsideDisplay() {
     setVisitorCount(null);
   }
 
+  function chooseLocation(location: ReceptionLocation) {
+    setSelectedLocation((currentLocation) => {
+      if (currentLocation === location) {
+        setVisitorCount(null);
+        return null;
+      }
+
+      setVisitorCount(null);
+      return location;
+    });
+  }
+
   const copy = outsideCopy[selectedLanguage];
   const sentMessage = lastRequest
     ? lastRequest.kind === "urgent"
@@ -295,7 +307,7 @@ export default function OutsideDisplay() {
             >
               <button
                 className="location-card-title"
-                onClick={() => setSelectedLocation(location)}
+                onClick={() => chooseLocation(location)}
                 type="button"
               >
                 {location}
@@ -338,7 +350,9 @@ export default function OutsideDisplay() {
           </div>
           {lastRequest?.status === "Waiting" ? <div className="sent-badge">Send</div> : null}
           <GlassKeyButton
-            className={`confirm-request-action${selectedKind ? ` ${selectedKind}` : ""}`}
+            className={`confirm-request-action${selectedKind ? ` ${selectedKind}` : ""}${
+              selectedLocation ? " location-selected" : ""
+            }`}
             disabled={!readyToConfirm}
             onClick={submitRequest}
             showScene={false}

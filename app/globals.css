@@ -3004,3 +3004,10 @@ h3 {
   font-size: clamp(1.55rem, 2.1vw, 2rem);
   font-weight: 1000;
 }
+
+.confirm-request-action.location-selected {
+  background:
+    linear-gradient(145deg, rgba(255, 214, 10, 0.92), rgba(255, 246, 176, 0.94)),
+    rgba(255, 238, 128, 0.72);
+  border-color: rgba(196, 145, 0, 0.32);
+}
