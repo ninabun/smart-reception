@@ -252,12 +252,7 @@ export default function OutsideDisplay() {
                 <span className="cancelled-note">Cancelled</span>
               )}
             </div>
-          ) : (
-            <div className="visitor-confirmation empty">
-              <span>{copy.ready}</span>
-              <strong>{copy.readyTitle}</strong>
-            </div>
-          )}
+          ) : null}
         </div>
 
         <div className="request-grid outside-grid">
@@ -316,7 +311,6 @@ export default function OutsideDisplay() {
 
         <div className="confirm-panel" aria-live="polite">
           <div>
-            <span>{selectedOption ? "Ready to send" : "Choose enquiry type"}</span>
             <strong>
               {selectedOption
                 ? `${copy.options[selectedOption.kind].label} - ${selectedLocation} - ${visitorCount} visitor${
