@@ -3374,6 +3374,12 @@ h3 {
   line-height: 1.05;
 }
 
+.outside-display .confirm-main-copy strong:not(.sent-message-text) {
+  font-size: clamp(1.45rem, 2.2vw, 2.1rem);
+  font-weight: 1000;
+  line-height: 1.08;
+}
+
 .outside-display .confirm-request-action {
   align-self: end;
 }
