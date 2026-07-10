@@ -3302,6 +3302,10 @@ h3 {
   color: #8b0000;
 }
 
+.outside-display .confirm-main-copy .sent-message-text {
+  color: #8b0000;
+}
+
 .outside-display .sent-followup {
   grid-column: 2;
   grid-row: 2;
