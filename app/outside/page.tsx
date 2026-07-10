@@ -359,11 +359,6 @@ export default function OutsideDisplay() {
     setSelectedKind(null);
     setSelectedLocation(null);
     setVisitorCount(null);
-    publishDraft({
-      selectedKind: null,
-      selectedLocation: null,
-      visitorCount: null
-    });
     saveRequests(nextRequests);
   }
 

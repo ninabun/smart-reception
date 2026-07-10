@@ -3360,7 +3360,12 @@ h3 {
   border: 2px solid rgba(120, 130, 145, 0.46);
   height: clamp(70px, 6vw, 84px);
   justify-self: end;
+  text-transform: uppercase;
   width: clamp(178px, 15vw, 230px);
+}
+
+.outside-display .confirm-request-action .glass-key-content {
+  text-transform: uppercase;
 }
 
 .outside-display .confirm-request-action {
