@@ -2597,3 +2597,108 @@ h3 {
 .ward-display .queue-row.acknowledged .queue-ack-time {
   color: #1d1d1f;
 }
+
+.outside-display .glass-key-button.request-card:not(.selected) {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(246, 248, 251, 0.82)),
+    rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(120, 130, 145, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 16px 38px rgba(15, 23, 42, 0.08);
+  color: #172033;
+  transform: none;
+}
+
+.outside-display .glass-key-button.request-card:not(.selected)::after {
+  display: none;
+}
+
+.outside-display .glass-key-button.request-card.selected.general {
+  background:
+    linear-gradient(145deg, #1f8bf2 0%, #bfe7ff 52%, #2778df 100%);
+}
+
+.outside-display .glass-key-button.request-card.selected.patient {
+  background:
+    linear-gradient(145deg, #49cad9 0%, #c8f6f8 52%, #1f9aa8 100%);
+}
+
+.outside-display .glass-key-button.request-card.selected.urgent {
+  background:
+    linear-gradient(145deg, #ffd7e8 0%, #fff5fb 48%, #e78ab7 100%);
+}
+
+.location-card:not(.active) {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(246, 248, 251, 0.82)),
+    rgba(255, 255, 255, 0.86);
+  border-color: rgba(120, 130, 145, 0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 12px 28px rgba(15, 23, 42, 0.06);
+}
+
+.location-card.active {
+  background:
+    linear-gradient(145deg, #fff8c7 0%, #ffd60a 100%),
+    #ffe16a;
+  border-color: rgba(230, 171, 0, 0.32);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.74),
+    0 18px 44px rgba(255, 190, 0, 0.2);
+}
+
+.location-card .people-choice:not(.active) {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(244, 247, 250, 0.76)),
+    rgba(255, 255, 255, 0.82);
+  border-color: rgba(120, 130, 145, 0.16);
+}
+
+.location-card .people-choice.active {
+  background:
+    linear-gradient(145deg, #fffdf0 0%, #ffd60a 100%),
+    #ffe16a;
+  outline: 3px solid rgba(29, 29, 31, 0.18);
+}
+
+.confirm-panel {
+  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+}
+
+.confirm-panel strong {
+  font-size: clamp(1.2rem, 1.65vw, 1.55rem);
+}
+
+.sent-badge {
+  align-self: center;
+  color: #e00000;
+  font-size: clamp(1.8rem, 3vw, 3.1rem);
+  font-weight: 1000;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.confirm-request-action .glass-key-content {
+  color: #000000;
+}
+
+.confirm-request-action:disabled .glass-key-content {
+  color: #000000;
+  opacity: 0.52;
+}
+
+.ward-display .queue-row.selected {
+  outline: 3px solid rgba(0, 0, 0, 0.72);
+  outline-offset: 2px;
+}
+
+.ward-display .alert-meta .status-acknowledged {
+  background:
+    linear-gradient(180deg, #202124, #111827);
+  border-color: rgba(255, 214, 10, 0.4);
+  color: #ffd60a;
+}

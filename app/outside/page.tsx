@@ -145,8 +145,8 @@ export default function OutsideDisplay() {
   const [requests, setRequests] = useState<ReceptionRequest[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageId>("english");
   const [lastRequest, setLastRequest] = useState<ReceptionRequest | null>(null);
-  const [selectedLocation, setSelectedLocation] = useState<ReceptionLocation>("E2");
-  const [visitorCount, setVisitorCount] = useState<VisitorCount>(1);
+  const [selectedLocation, setSelectedLocation] = useState<ReceptionLocation | null>(null);
+  const [visitorCount, setVisitorCount] = useState<VisitorCount | null>(null);
   const [selectedKind, setSelectedKind] = useState<ReceptionRequest["kind"] | null>(null);
 
   useEffect(() => {
@@ -156,7 +156,7 @@ export default function OutsideDisplay() {
   function submitRequest() {
     const option = requestOptions.find((requestOption) => requestOption.kind === selectedKind);
 
-    if (!option) {
+    if (!option || !selectedLocation || !visitorCount) {
       return;
     }
 
@@ -217,6 +217,7 @@ export default function OutsideDisplay() {
       : "Enquiry Sent. Please wait."
     : null;
   const selectedOption = requestOptions.find((option) => option.kind === selectedKind);
+  const readyToConfirm = Boolean(selectedOption && selectedLocation && visitorCount);
 
   return (
     <main className="display-shell outside-display">
@@ -312,16 +313,17 @@ export default function OutsideDisplay() {
         <div className="confirm-panel" aria-live="polite">
           <div>
             <strong>
-              {selectedOption
+              {readyToConfirm && selectedOption && selectedLocation && visitorCount
                 ? `${copy.options[selectedOption.kind].label} - ${selectedLocation} - ${visitorCount} visitor${
                     visitorCount > 1 ? "s" : ""
                   }`
                 : "Select one request button, then press Confirm."}
             </strong>
           </div>
+          {lastRequest?.status === "Waiting" ? <div className="sent-badge">Sent</div> : null}
           <GlassKeyButton
             className="confirm-request-action"
-            disabled={!selectedOption}
+            disabled={!readyToConfirm}
             onClick={submitRequest}
             showScene={false}
             tone={selectedOption?.kind === "urgent" ? "red" : selectedOption?.kind === "patient" ? "green" : "blue"}
