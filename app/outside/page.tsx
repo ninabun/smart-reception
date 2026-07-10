@@ -247,6 +247,7 @@ export default function OutsideDisplay() {
                 className={selectedLanguage === language.id ? "language active" : "language"}
                 key={language.id}
                 onClick={() => setSelectedLanguage(language.id)}
+                showScene={false}
                 tone="neutral"
               >
                 {language.label}

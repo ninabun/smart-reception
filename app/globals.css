@@ -2874,3 +2874,23 @@ h3 {
   min-width: 140px;
   padding: 14px 22px;
 }
+
+.outside-display .glass-key-button.request-card:not(.selected)::after {
+  bottom: 18px;
+  display: block;
+  height: 9px;
+  left: 24px;
+  width: 58px;
+}
+
+.outside-display .glass-key-button.request-card:not(.selected).general::after {
+  background: #0a84ff;
+}
+
+.outside-display .glass-key-button.request-card:not(.selected).patient::after {
+  background: #12a88f;
+}
+
+.outside-display .glass-key-button.request-card:not(.selected).urgent::after {
+  background: #ff4d70;
+}
