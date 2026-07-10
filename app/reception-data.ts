@@ -19,6 +19,7 @@ export type ReceptionRequest = {
 };
 
 export const storageKey = "smart-reception-requests";
+export const receptionChannelName = "smart-reception-channel";
 
 export const requestOptions: Array<
   Omit<ReceptionRequest, "id" | "createdAt" | "createdDate" | "status" | "kind"> & {
@@ -96,4 +97,10 @@ export function readRequests() {
 export function saveRequests(requests: ReceptionRequest[]) {
   window.localStorage.setItem(storageKey, JSON.stringify(requests));
   window.dispatchEvent(new Event("smart-reception-update"));
+
+  if ("BroadcastChannel" in window) {
+    const channel = new BroadcastChannel(receptionChannelName);
+    channel.postMessage({ type: "smart-reception-update" });
+    channel.close();
+  }
 }

@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { filterTodayRequests, readRequests, saveRequests, type ReceptionRequest } from "../reception-data";
+import {
+  filterTodayRequests,
+  readRequests,
+  receptionChannelName,
+  saveRequests,
+  type ReceptionRequest
+} from "../reception-data";
 import GlassKeyButton from "../components/GlassKeyButton";
 
 type WardLanguage = "english" | "chinese";
@@ -221,10 +227,16 @@ export default function WardDisplay() {
     refreshRequests();
     window.addEventListener("storage", refreshRequests);
     window.addEventListener("smart-reception-update", refreshRequests);
+    const channel = "BroadcastChannel" in window ? new BroadcastChannel(receptionChannelName) : null;
+
+    if (channel) {
+      channel.onmessage = refreshRequests;
+    }
 
     return () => {
       window.removeEventListener("storage", refreshRequests);
       window.removeEventListener("smart-reception-update", refreshRequests);
+      channel?.close();
     };
   }, []);
 
@@ -235,7 +247,7 @@ export default function WardDisplay() {
 
     const refreshTimer = window.setInterval(() => {
       setRequests(readRequests());
-    }, 700);
+    }, 200);
 
     return () => window.clearInterval(refreshTimer);
   }, [showOutsidePreview]);

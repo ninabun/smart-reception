@@ -427,12 +427,10 @@ export default function OutsideDisplay() {
           ))}
         </div>
 
-        <div className="confirm-panel" aria-live="polite">
+        <div className={sentMessage ? "confirm-panel sent" : "confirm-panel"} aria-live="polite">
           <div className="confirm-main-copy">
-            <strong>
-              {readyToConfirm && selectedSummary
-                ? selectedSummary
-                : actions.confirmInstruction}
+            <strong className={sentMessage ? "sent-message-text" : ""}>
+              {sentMessage ?? actions.confirmInstruction}
             </strong>
           </div>
           <GlassKeyButton
@@ -446,18 +444,17 @@ export default function OutsideDisplay() {
           >
             {actions.confirmButton}
           </GlassKeyButton>
-          {sentMessage ? (
-            <div className="sent-followup">
-              <strong>{sentMessage}</strong>
-              <button className="outside-cancel-action cancel-sent-action" onClick={resetOutsideSelection} type="button">
-                {actions.cancelSentButton}
-              </button>
-            </div>
-          ) : (
-            <button className="outside-cancel-action" onClick={resetOutsideSelection} type="button">
-              {actions.cancelButton}
+          <div className="sent-followup">
+            <button
+              className={`outside-cancel-action${sentMessage ? " cancel-sent-action" : ""}${
+                !sentMessage && selectedKind ? ` ${selectedKind}` : ""
+              }${!sentMessage && selectedLocation && visitorCount ? " location-selected" : ""}`}
+              onClick={resetOutsideSelection}
+              type="button"
+            >
+              {sentMessage ? actions.cancelSentButton : actions.cancelButton}
             </button>
-          )}
+          </div>
         </div>
       </section>
     </main>
