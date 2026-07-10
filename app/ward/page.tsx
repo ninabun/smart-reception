@@ -63,7 +63,8 @@ const wardCopy: Record<
     noEvents: "No workflow events yet.",
     status: {
       Waiting: "Not yet acknowledged",
-      Acknowledged: "Acknowledged"
+      Acknowledged: "Acknowledged",
+      Cancelled: "Cancelled"
     },
     team: {
       Clerk: "Clerk",
@@ -106,7 +107,8 @@ const wardCopy: Record<
     noEvents: "暫時沒有流程紀錄。",
     status: {
       Waiting: "尚未確認",
-      Acknowledged: "已確認"
+      Acknowledged: "已確認",
+      Cancelled: "已取消"
     },
     team: {
       Clerk: "文員",
@@ -131,6 +133,7 @@ const wardCopy: Record<
 export default function WardDisplay() {
   const [requests, setRequests] = useState<ReceptionRequest[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<WardLanguage>("english");
+  const [selectedRequestId, setSelectedRequestId] = useState<number | null>(null);
 
   useEffect(() => {
     function refreshRequests() {
@@ -158,8 +161,10 @@ export default function WardDisplay() {
   );
   const copy = wardCopy[selectedLanguage];
   const hasWaitingRequests = waitingRequests.length > 0;
-  const activeRequest =
-    waitingRequests[0] ?? todayRequests[0];
+  const selectedRequest = selectedRequestId
+    ? todayRequests.find((request) => request.id === selectedRequestId)
+    : null;
+  const activeRequest = selectedRequest ?? waitingRequests[0] ?? todayRequests[0];
 
   const metrics = useMemo(
     () => [
@@ -186,8 +191,16 @@ export default function WardDisplay() {
   );
 
   function updateRequest(id: number, status: ReceptionRequest["status"]) {
+    const acknowledgedAt =
+      status === "Acknowledged"
+        ? new Intl.DateTimeFormat("en", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+          }).format(new Date())
+        : undefined;
     const nextRequests = requests.map((request) =>
-      request.id === id ? { ...request, status } : request
+      request.id === id ? { ...request, status, acknowledgedAt } : request
     );
 
     setRequests(nextRequests);
@@ -196,7 +209,17 @@ export default function WardDisplay() {
 
   function clearDemo() {
     setRequests([]);
+    setSelectedRequestId(null);
     saveRequests([]);
+  }
+
+  function requestMeta(request: ReceptionRequest) {
+    return [
+      request.location,
+      request.visitorCount ? `${request.visitorCount} visitor${request.visitorCount > 1 ? "s" : ""}` : null
+    ]
+      .filter(Boolean)
+      .join(" - ");
   }
 
   return (
@@ -257,6 +280,9 @@ export default function WardDisplay() {
                   {copy.acknowledge}
                 </GlassKeyButton>
               ) : null}
+              {activeRequest.status === "Cancelled" ? (
+                <p className="cancelled-alert-note">Request cancelled from outside panel.</p>
+              ) : null}
             </>
           ) : (
             <>
@@ -289,13 +315,27 @@ export default function WardDisplay() {
               <p className="muted">{copy.noEvents}</p>
             ) : (
               todayRequests.map((request) => (
-                <div className={`queue-row ${request.kind}`} key={request.id}>
+                <button
+                  className={`queue-row ${request.kind} ${request.status.toLowerCase()}${
+                    activeRequest?.id === request.id ? " selected" : ""
+                  }`}
+                  key={request.id}
+                  onClick={() => setSelectedRequestId(request.id)}
+                  type="button"
+                >
                   <span>{request.createdAt}</span>
                   <strong>{copy.request[request.kind]}</strong>
+                  {requestMeta(request) ? <small>{requestMeta(request)}</small> : null}
                   <em>
                     {copy.team[request.team] ?? request.team} - {copy.status[request.status]}
+                    {request.status === "Acknowledged" && request.acknowledgedAt
+                      ? ` (${request.acknowledgedAt})`
+                      : ""}
+                    {request.status === "Cancelled" && request.cancelledAt
+                      ? ` (${request.cancelledAt})`
+                      : ""}
                   </em>
-                </div>
+                </button>
               ))
             )}
           </div>

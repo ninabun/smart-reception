@@ -7,11 +7,13 @@ import {
   readRequests,
   requestOptions,
   saveRequests,
+  type ReceptionLocation,
   type ReceptionRequest
 } from "../reception-data";
 import GlassKeyButton from "../components/GlassKeyButton";
 
 type LanguageId = (typeof languageOptions)[number]["id"];
+type VisitorCount = NonNullable<ReceptionRequest["visitorCount"]>;
 
 const outsideCopy: Record<
   LanguageId,
@@ -143,6 +145,8 @@ export default function OutsideDisplay() {
   const [requests, setRequests] = useState<ReceptionRequest[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageId>("english");
   const [lastRequest, setLastRequest] = useState<ReceptionRequest | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<ReceptionLocation>("E2");
+  const [visitorCount, setVisitorCount] = useState<VisitorCount>(1);
 
   useEffect(() => {
     setRequests(readRequests());
@@ -158,6 +162,8 @@ export default function OutsideDisplay() {
       tone: option.tone,
       priority: option.priority,
       status: "Waiting",
+      location: selectedLocation,
+      visitorCount,
       createdDate: getTodayKey(),
       createdAt: new Intl.DateTimeFormat("en", {
         hour: "2-digit",
@@ -166,6 +172,30 @@ export default function OutsideDisplay() {
       }).format(new Date())
     };
     const nextRequests = [nextRequest, ...requests].slice(0, 12);
+
+    setRequests(nextRequests);
+    setLastRequest(nextRequest);
+    saveRequests(nextRequests);
+  }
+
+  function cancelLastRequest() {
+    if (!lastRequest || lastRequest.status !== "Waiting") {
+      return;
+    }
+
+    const cancelledAt = new Intl.DateTimeFormat("en", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    }).format(new Date());
+    const nextRequest: ReceptionRequest = {
+      ...lastRequest,
+      status: "Cancelled",
+      cancelledAt
+    };
+    const nextRequests = requests.map((request) =>
+      request.id === lastRequest.id ? nextRequest : request
+    );
 
     setRequests(nextRequests);
     setLastRequest(nextRequest);
@@ -205,6 +235,13 @@ export default function OutsideDisplay() {
           {lastRequest ? (
             <div className={`visitor-confirmation ${lastRequest.kind}`} role="status">
               <strong>{sentMessage}</strong>
+              {lastRequest.status === "Waiting" ? (
+                <button className="cancel-request-action" onClick={cancelLastRequest} type="button">
+                  Cancel
+                </button>
+              ) : (
+                <span className="cancelled-note">Cancelled</span>
+              )}
             </div>
           ) : (
             <div className="visitor-confirmation empty">
@@ -212,6 +249,38 @@ export default function OutsideDisplay() {
               <strong>{copy.readyTitle}</strong>
             </div>
           )}
+        </div>
+
+        <div className="outside-choice-panel" aria-label="Location and visitor count">
+          <div className="location-row">
+            {(["E2", "A11"] as ReceptionLocation[]).map((location) => (
+              <GlassKeyButton
+                className={selectedLocation === location ? "location-choice active" : "location-choice"}
+                key={location}
+                onClick={() => setSelectedLocation(location)}
+                showScene={false}
+                tone="neutral"
+              >
+                {location}
+              </GlassKeyButton>
+            ))}
+          </div>
+          <div className="people-row" aria-label={`${selectedLocation} visitor count`}>
+            {([1, 2] as VisitorCount[]).map((count) => (
+              <GlassKeyButton
+                className={visitorCount === count ? "people-choice active" : "people-choice"}
+                key={count}
+                onClick={() => setVisitorCount(count)}
+                showScene={false}
+                tone="neutral"
+              >
+                <span className={count === 1 ? "human-icon single" : "human-icon double"} aria-hidden="true">
+                  <i />
+                  {count === 2 ? <i /> : null}
+                </span>
+              </GlassKeyButton>
+            ))}
+          </div>
         </div>
 
         <div className="request-grid outside-grid">

@@ -1,4 +1,5 @@
 export type RequestKind = "general" | "patient" | "urgent";
+export type ReceptionLocation = "E2" | "A11";
 
 export type ReceptionRequest = {
   id: number;
@@ -10,7 +11,11 @@ export type ReceptionRequest = {
   priority: "Standard" | "High";
   createdAt: string;
   createdDate: string;
-  status: "Waiting" | "Acknowledged";
+  status: "Waiting" | "Acknowledged" | "Cancelled";
+  acknowledgedAt?: string;
+  cancelledAt?: string;
+  location?: ReceptionLocation;
+  visitorCount?: 1 | 2;
 };
 
 export const storageKey = "smart-reception-requests";
