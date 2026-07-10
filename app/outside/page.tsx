@@ -148,6 +148,7 @@ const actionCopy: Record<
     confirmInstruction: string;
     confirmButton: string;
     cancelButton: string;
+    cancelSentButton: string;
     sendBadge: string;
     sentMessage: Record<ReceptionRequest["kind"], string>;
     visitorLabel: Record<VisitorCount, string>;
@@ -157,6 +158,7 @@ const actionCopy: Record<
     confirmInstruction: "Select one request button, then press Confirm.",
     confirmButton: "Confirm",
     cancelButton: "Cancel",
+    cancelSentButton: "Cancel Sent",
     sendBadge: "SENT",
     sentMessage: {
       general: "Enquiry Sent. Please wait.",
@@ -173,6 +175,7 @@ const actionCopy: Record<
     confirmInstruction: "請選擇一個查詢，然後按確認。",
     confirmButton: "確認",
     cancelButton: "取消",
+    cancelSentButton: "取消送出",
     sendBadge: "已送出",
     sentMessage: {
       general: "查詢已送出，請等候。",
@@ -189,6 +192,7 @@ const actionCopy: Record<
     confirmInstruction: "एक अनुरोध चुनें, फिर पुष्टि दबाएँ।",
     confirmButton: "पुष्टि",
     cancelButton: "रद्द",
+    cancelSentButton: "भेजा गया रद्द करें",
     sendBadge: "भेजा गया",
     sentMessage: {
       general: "पूछताछ भेज दी गई है। कृपया प्रतीक्षा करें।",
@@ -205,6 +209,7 @@ const actionCopy: Record<
     confirmInstruction: "ایک درخواست منتخب کریں، پھر تصدیق دبائیں۔",
     confirmButton: "تصدیق",
     cancelButton: "منسوخ",
+    cancelSentButton: "بھیجا گیا منسوخ کریں",
     sendBadge: "بھیج دیا",
     sentMessage: {
       general: "انکوائری بھیج دی گئی ہے۔ براہ کرم انتظار کریں۔",
@@ -315,6 +320,7 @@ export default function OutsideDisplay() {
 
   const copy = outsideCopy[selectedLanguage];
   const actions = actionCopy[selectedLanguage];
+  const sentMessage = lastRequest?.status === "Waiting" ? actions.sentMessage[lastRequest.kind] : null;
   const selectedOption = requestOptions.find((option) => option.kind === selectedKind);
   const readyToConfirm = Boolean(selectedOption || (selectedLocation && visitorCount));
   const selectedLocationLabel =
@@ -422,14 +428,13 @@ export default function OutsideDisplay() {
         </div>
 
         <div className="confirm-panel" aria-live="polite">
-          <div>
+          <div className="confirm-main-copy">
             <strong>
               {readyToConfirm && selectedSummary
                 ? selectedSummary
                 : actions.confirmInstruction}
             </strong>
           </div>
-          {lastRequest?.status === "Waiting" ? <div className="sent-badge">{actions.sendBadge}</div> : null}
           <GlassKeyButton
             className={`confirm-request-action${selectedKind ? ` ${selectedKind}` : ""}${
               selectedLocation && visitorCount ? " location-selected" : ""
@@ -441,9 +446,18 @@ export default function OutsideDisplay() {
           >
             {actions.confirmButton}
           </GlassKeyButton>
-          <button className="outside-cancel-action" onClick={resetOutsideSelection} type="button">
-            {actions.cancelButton}
-          </button>
+          {sentMessage ? (
+            <div className="sent-followup">
+              <strong>{sentMessage}</strong>
+              <button className="outside-cancel-action cancel-sent-action" onClick={resetOutsideSelection} type="button">
+                {actions.cancelSentButton}
+              </button>
+            </div>
+          ) : (
+            <button className="outside-cancel-action" onClick={resetOutsideSelection} type="button">
+              {actions.cancelButton}
+            </button>
+          )}
         </div>
       </section>
     </main>

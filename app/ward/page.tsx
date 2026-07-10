@@ -361,6 +361,7 @@ export default function WardDisplay() {
                 className={selectedLanguage === language ? "language active" : "language"}
                 key={language}
                 onClick={() => setSelectedLanguage(language)}
+                showScene={false}
                 tone="neutral"
               >
                 {language === "chinese" ? chineseWardCopy.languageLabel : wardCopy[language].languageLabel}
