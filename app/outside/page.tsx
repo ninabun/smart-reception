@@ -273,7 +273,7 @@ export default function OutsideDisplay() {
             <GlassKeyButton
               className={`request-card ${option.kind}${selectedKind === option.kind ? " selected" : ""}`}
               key={option.kind}
-              onClick={() => setSelectedKind(option.kind)}
+              onClick={() => setSelectedKind((currentKind) => (currentKind === option.kind ? null : option.kind))}
               showScene={false}
               tone={option.kind === "urgent" ? "red" : option.kind === "patient" ? "green" : "blue"}
             >
