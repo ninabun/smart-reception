@@ -5,6 +5,7 @@ import {
   getTodayKey,
   languageOptions,
   readRequests,
+  receptionChannelName,
   requestOptions,
   saveRequests,
   type ReceptionLocation,
@@ -15,6 +16,14 @@ import GlassKeyButton from "../components/GlassKeyButton";
 type LanguageId = (typeof languageOptions)[number]["id"];
 type VisitorCount = NonNullable<ReceptionRequest["visitorCount"]>;
 type EnquiryKind = Exclude<ReceptionRequest["kind"], "location">;
+type OutsideDraft = {
+  selectedLanguage: LanguageId;
+  selectedKind: EnquiryKind | null;
+  selectedLocation: ReceptionLocation | null;
+  visitorCount: VisitorCount | null;
+};
+
+const outsideDraftKey = "smart-reception-outside-draft";
 
 const outsideCopy: Record<
   LanguageId,
@@ -224,6 +233,30 @@ const actionCopy: Record<
   }
 };
 
+function readOutsideDraft() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  try {
+    const saved = window.localStorage.getItem(outsideDraftKey);
+    return saved ? (JSON.parse(saved) as OutsideDraft) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveOutsideDraft(draft: OutsideDraft) {
+  window.localStorage.setItem(outsideDraftKey, JSON.stringify(draft));
+  window.dispatchEvent(new CustomEvent("smart-reception-outside-draft", { detail: draft }));
+
+  if ("BroadcastChannel" in window) {
+    const channel = new BroadcastChannel(receptionChannelName);
+    channel.postMessage({ type: "smart-reception-outside-draft", draft });
+    channel.close();
+  }
+}
+
 export default function OutsideDisplay() {
   const [requests, setRequests] = useState<ReceptionRequest[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageId>("english");
@@ -234,7 +267,60 @@ export default function OutsideDisplay() {
 
   useEffect(() => {
     setRequests(readRequests());
+    const savedDraft = readOutsideDraft();
+
+    function applyDraft(draft: OutsideDraft | null) {
+      if (!draft) {
+        return;
+      }
+
+      setSelectedLanguage(draft.selectedLanguage);
+      setSelectedKind(draft.selectedKind);
+      setSelectedLocation(draft.selectedLocation);
+      setVisitorCount(draft.visitorCount);
+      setLastRequest(null);
+    }
+
+    function handleDraftEvent(event: Event) {
+      applyDraft((event as CustomEvent<OutsideDraft>).detail);
+    }
+
+    function handleStorage(event: StorageEvent) {
+      if (event.key === outsideDraftKey) {
+        applyDraft(readOutsideDraft());
+      }
+    }
+
+    const channel = "BroadcastChannel" in window ? new BroadcastChannel(receptionChannelName) : null;
+
+    if (channel) {
+      channel.onmessage = (event) => {
+        if (event.data?.type === "smart-reception-outside-draft") {
+          applyDraft(event.data.draft as OutsideDraft);
+        }
+      };
+    }
+
+    applyDraft(savedDraft);
+    window.addEventListener("smart-reception-outside-draft", handleDraftEvent);
+    window.addEventListener("storage", handleStorage);
+
+    return () => {
+      window.removeEventListener("smart-reception-outside-draft", handleDraftEvent);
+      window.removeEventListener("storage", handleStorage);
+      channel?.close();
+    };
   }, []);
+
+  function publishDraft(nextDraft: Partial<OutsideDraft>) {
+    saveOutsideDraft({
+      selectedLanguage,
+      selectedKind,
+      selectedLocation,
+      visitorCount,
+      ...nextDraft
+    });
+  }
 
   function submitRequest() {
     const option = requestOptions.find((requestOption) => requestOption.kind === selectedKind);
@@ -273,6 +359,11 @@ export default function OutsideDisplay() {
     setSelectedKind(null);
     setSelectedLocation(null);
     setVisitorCount(null);
+    publishDraft({
+      selectedKind: null,
+      selectedLocation: null,
+      visitorCount: null
+    });
     saveRequests(nextRequests);
   }
 
@@ -309,6 +400,11 @@ export default function OutsideDisplay() {
     setSelectedKind(null);
     setSelectedLocation(null);
     setVisitorCount(null);
+    publishDraft({
+      selectedKind: null,
+      selectedLocation: null,
+      visitorCount: null
+    });
   }
 
   function chooseLocation(location: ReceptionLocation) {
@@ -316,6 +412,11 @@ export default function OutsideDisplay() {
     setVisitorCount(null);
     setSelectedKind(null);
     setLastRequest(null);
+    publishDraft({
+      selectedKind: null,
+      selectedLocation: location,
+      visitorCount: null
+    });
   }
 
   const copy = outsideCopy[selectedLanguage];
@@ -350,7 +451,10 @@ export default function OutsideDisplay() {
               <GlassKeyButton
                 className={selectedLanguage === language.id ? "language active" : "language"}
                 key={language.id}
-                onClick={() => setSelectedLanguage(language.id)}
+                onClick={() => {
+                  setSelectedLanguage(language.id);
+                  publishDraft({ selectedLanguage: language.id });
+                }}
                 showScene={false}
                 tone="neutral"
               >
@@ -366,7 +470,17 @@ export default function OutsideDisplay() {
               className={`request-card ${option.kind}${selectedKind === option.kind ? " selected" : ""}`}
               key={option.kind}
               onClick={() => {
-                setSelectedKind((currentKind) => (currentKind === option.kind ? null : option.kind));
+                setSelectedKind((currentKind) => {
+                  const nextKind = currentKind === option.kind ? null : option.kind;
+
+                  publishDraft({
+                    selectedKind: nextKind,
+                    selectedLocation: null,
+                    visitorCount: null
+                  });
+
+                  return nextKind;
+                });
                 setSelectedLocation(null);
                 setVisitorCount(null);
                 setLastRequest(null);
@@ -413,6 +527,11 @@ export default function OutsideDisplay() {
                       setVisitorCount(count);
                       setSelectedKind(null);
                       setLastRequest(null);
+                      publishDraft({
+                        selectedKind: null,
+                        selectedLocation: location,
+                        visitorCount: count
+                      });
                     }}
                     type="button"
                   >
