@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { filterTodayRequests, readRequests, saveRequests, type ReceptionRequest } from "../reception-data";
 import GlassKeyButton from "../components/GlassKeyButton";
@@ -30,7 +29,7 @@ const wardCopy: Record<
     noEvents: string;
     status: Record<ReceptionRequest["status"], string>;
     team: Record<string, string>;
-    request: Record<ReceptionRequest["kind"], string>;
+    request: Record<Exclude<ReceptionRequest["kind"], "location">, string>;
     metrics: {
       requestsToday: string;
       requestsTodayHint: string;
@@ -73,7 +72,7 @@ const wardCopy: Record<
     },
     request: {
       general: "General Enquiry",
-      patient: "Accompany Patient",
+      patient: "Accompany",
       urgent: "Urgent Assistant"
     },
     metrics: {
@@ -136,6 +135,7 @@ export default function WardDisplay() {
   const [selectedLanguage, setSelectedLanguage] = useState<WardLanguage>("english");
   const [selectedRequestId, setSelectedRequestId] = useState<number | null>(null);
   const [queueFilter, setQueueFilter] = useState<QueueFilter>("today");
+  const [showOutsidePreview, setShowOutsidePreview] = useState(false);
 
   useEffect(() => {
     function refreshRequests() {
@@ -228,12 +228,31 @@ export default function WardDisplay() {
   }
 
   function requestMeta(request: ReceptionRequest) {
-    return [
-      request.location,
-      request.visitorCount ? `${request.visitorCount} visitor${request.visitorCount > 1 ? "s" : ""}` : null
-    ]
-      .filter(Boolean)
-      .join(" - ");
+    if (request.kind === "location") {
+      return "";
+    }
+
+    if (!request.location || !request.visitorCount) {
+      return "";
+    }
+
+    return `${request.location} (${request.visitorCount === 1 ? "mother" : "mother & baby"})`;
+  }
+
+  function requestTitle(request: ReceptionRequest) {
+    return request.kind === "location" ? request.label : copy.request[request.kind];
+  }
+
+  function requestTone(request: ReceptionRequest) {
+    if (request.kind === "urgent") {
+      return "red";
+    }
+
+    if (request.kind === "patient") {
+      return "green";
+    }
+
+    return "blue";
   }
 
   return (
@@ -256,9 +275,13 @@ export default function WardDisplay() {
               </GlassKeyButton>
             ))}
           </div>
-          <Link className="screen-link outside-display-link" href="/outside">
+          <button
+            className="screen-link outside-display-link"
+            onClick={() => setShowOutsidePreview(true)}
+            type="button"
+          >
             {copy.outsideDisplay}
-          </Link>
+          </button>
         </div>
       </header>
 
@@ -273,7 +296,7 @@ export default function WardDisplay() {
               <p className={activeRequest.priority === "High" ? "eyebrow priority-high" : "eyebrow"}>
                 {copy.priority[activeRequest.priority]}
               </p>
-              <h2>{copy.request[activeRequest.kind]}</h2>
+              <h2>{requestTitle(activeRequest)}</h2>
               {activeRequest.kind === "urgent" ? (
                 <p>Notify Healthcare Providers IMMEDIATELY.</p>
               ) : activeRequest.kind === "patient" ? (
@@ -291,7 +314,7 @@ export default function WardDisplay() {
                 <GlassKeyButton
                   className="primary-action"
                   onClick={() => updateRequest(activeRequest.id, "Acknowledged")}
-                  tone={activeRequest.kind === "urgent" ? "red" : activeRequest.kind === "patient" ? "green" : "blue"}
+                  tone={requestTone(activeRequest)}
                 >
                   {copy.acknowledge}
                 </GlassKeyButton>
@@ -345,7 +368,7 @@ export default function WardDisplay() {
                 >
                   <span className="queue-time">{request.createdAt} (Request Time)</span>
                   <strong className="queue-title">
-                    {copy.request[request.kind]}
+                    {requestTitle(request)}
                     {request.status === "Acknowledged" && request.acknowledgedAt ? (
                       <span className="queue-ack-time">{request.acknowledgedAt} (Acknowledge Time)</span>
                     ) : null}
@@ -371,6 +394,21 @@ export default function WardDisplay() {
           </GlassKeyButton>
         </aside>
       </section>
+      {showOutsidePreview ? (
+        <div className="outside-preview-overlay" role="dialog" aria-label={copy.outsideDisplay}>
+          <div className="outside-preview-panel">
+            <button
+              aria-label="Close outside display preview"
+              className="outside-preview-close"
+              onClick={() => setShowOutsidePreview(false)}
+              type="button"
+            >
+              Close
+            </button>
+            <iframe src="/outside" title={copy.outsideDisplay} />
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }

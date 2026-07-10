@@ -1,4 +1,4 @@
-export type RequestKind = "general" | "patient" | "urgent";
+export type RequestKind = "general" | "patient" | "urgent" | "location";
 export type ReceptionLocation = "E2" | "A11";
 
 export type ReceptionRequest = {
@@ -21,7 +21,8 @@ export type ReceptionRequest = {
 export const storageKey = "smart-reception-requests";
 
 export const requestOptions: Array<
-  Omit<ReceptionRequest, "id" | "createdAt" | "createdDate" | "status"> & {
+  Omit<ReceptionRequest, "id" | "createdAt" | "createdDate" | "status" | "kind"> & {
+    kind: Exclude<RequestKind, "location">;
     helper: string;
     confirmation: string;
   }

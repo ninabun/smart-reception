@@ -14,6 +14,7 @@ import GlassKeyButton from "../components/GlassKeyButton";
 
 type LanguageId = (typeof languageOptions)[number]["id"];
 type VisitorCount = NonNullable<ReceptionRequest["visitorCount"]>;
+type EnquiryKind = Exclude<ReceptionRequest["kind"], "location">;
 
 const outsideCopy: Record<
   LanguageId,
@@ -26,7 +27,7 @@ const outsideCopy: Record<
     alertSent: string;
     stayClose: string;
     options: Record<
-      ReceptionRequest["kind"],
+      EnquiryKind,
       {
         label: string;
         helper: string;
@@ -141,13 +142,90 @@ const outsideCopy: Record<
   }
 };
 
+const actionCopy: Record<
+  LanguageId,
+  {
+    confirmInstruction: string;
+    confirmButton: string;
+    cancelButton: string;
+    sendBadge: string;
+    sentMessage: Record<ReceptionRequest["kind"], string>;
+    visitorLabel: Record<VisitorCount, string>;
+  }
+> = {
+  english: {
+    confirmInstruction: "Select one request button, then press Confirm.",
+    confirmButton: "Confirm",
+    cancelButton: "Cancel",
+    sendBadge: "Send",
+    sentMessage: {
+      general: "Enquiry Sent. Please wait.",
+      patient: "Enquiry Sent. Please wait.",
+      urgent: "Urgent Alert Sent. Please wait.",
+      location: "Enquiry Sent. Please wait."
+    },
+    visitorLabel: {
+      1: "mother",
+      2: "mother & baby"
+    }
+  },
+  chinese: {
+    confirmInstruction: "請選擇一個查詢，然後按確認。",
+    confirmButton: "確認",
+    cancelButton: "取消",
+    sendBadge: "已送出",
+    sentMessage: {
+      general: "查詢已送出，請等候。",
+      patient: "查詢已送出，請等候。",
+      urgent: "緊急通知已送出，請等候。",
+      location: "查詢已送出，請等候。"
+    },
+    visitorLabel: {
+      1: "媽媽",
+      2: "媽媽及嬰兒"
+    }
+  },
+  hindi: {
+    confirmInstruction: "एक अनुरोध चुनें, फिर पुष्टि दबाएँ।",
+    confirmButton: "पुष्टि",
+    cancelButton: "रद्द",
+    sendBadge: "भेजा गया",
+    sentMessage: {
+      general: "पूछताछ भेज दी गई है। कृपया प्रतीक्षा करें।",
+      patient: "पूछताछ भेज दी गई है। कृपया प्रतीक्षा करें।",
+      urgent: "तत्काल सूचना भेज दी गई है। कृपया प्रतीक्षा करें।",
+      location: "पूछताछ भेज दी गई है। कृपया प्रतीक्षा करें।"
+    },
+    visitorLabel: {
+      1: "माँ",
+      2: "माँ और बच्चा"
+    }
+  },
+  urdu: {
+    confirmInstruction: "ایک درخواست منتخب کریں، پھر تصدیق دبائیں۔",
+    confirmButton: "تصدیق",
+    cancelButton: "منسوخ",
+    sendBadge: "بھیج دیا",
+    sentMessage: {
+      general: "انکوائری بھیج دی گئی ہے۔ براہ کرم انتظار کریں۔",
+      patient: "انکوائری بھیج دی گئی ہے۔ براہ کرم انتظار کریں۔",
+      urgent: "فوری اطلاع بھیج دی گئی ہے۔ براہ کرم انتظار کریں۔",
+      location: "انکوائری بھیج دی گئی ہے۔ براہ کرم انتظار کریں۔"
+    },
+    visitorLabel: {
+      1: "ماں",
+      2: "ماں اور بچہ"
+    }
+  }
+};
+
 export default function OutsideDisplay() {
   const [requests, setRequests] = useState<ReceptionRequest[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageId>("english");
   const [lastRequest, setLastRequest] = useState<ReceptionRequest | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<ReceptionLocation | null>(null);
   const [visitorCount, setVisitorCount] = useState<VisitorCount | null>(null);
-  const [selectedKind, setSelectedKind] = useState<ReceptionRequest["kind"] | null>(null);
+  const [selectedKind, setSelectedKind] = useState<EnquiryKind | null>(null);
 
   useEffect(() => {
     setRequests(readRequests());
@@ -156,21 +234,26 @@ export default function OutsideDisplay() {
   function submitRequest() {
     const option = requestOptions.find((requestOption) => requestOption.kind === selectedKind);
 
-    if (!option || !selectedLocation || !visitorCount) {
+    if (!option && (!selectedLocation || !visitorCount)) {
       return;
     }
 
+    const locationLabel =
+      selectedLocation && visitorCount
+        ? `${selectedLocation} (${visitorCount === 1 ? "mother" : "mother & baby"})`
+        : null;
+
     const nextRequest: ReceptionRequest = {
       id: Date.now(),
-      kind: option.kind,
-      label: option.label,
-      team: option.team,
-      color: option.color,
-      tone: option.tone,
-      priority: option.priority,
+      kind: option?.kind ?? "location",
+      label: option?.label ?? locationLabel ?? "Location request",
+      team: option?.team ?? "Clerk",
+      color: option?.color ?? "Yellow",
+      tone: option?.tone ?? "Location alert",
+      priority: option?.priority ?? "Standard",
       status: "Waiting",
-      location: selectedLocation,
-      visitorCount,
+      location: selectedLocation ?? undefined,
+      visitorCount: visitorCount ?? undefined,
       createdDate: getTodayKey(),
       createdAt: new Intl.DateTimeFormat("en", {
         hour: "2-digit",
@@ -183,6 +266,8 @@ export default function OutsideDisplay() {
     setRequests(nextRequests);
     setLastRequest(nextRequest);
     setSelectedKind(null);
+    setSelectedLocation(null);
+    setVisitorCount(null);
     saveRequests(nextRequests);
   }
 
@@ -222,25 +307,26 @@ export default function OutsideDisplay() {
   }
 
   function chooseLocation(location: ReceptionLocation) {
-    setSelectedLocation((currentLocation) => {
-      if (currentLocation === location) {
-        setVisitorCount(null);
-        return null;
-      }
-
-      setVisitorCount(null);
-      return location;
-    });
+    setSelectedLocation(location);
+    setVisitorCount(null);
+    setSelectedKind(null);
   }
 
   const copy = outsideCopy[selectedLanguage];
-  const sentMessage = lastRequest
-    ? lastRequest.kind === "urgent"
-      ? "Urgent Alert Sent. Please wait."
-      : "Enquiry Sent. Please wait."
-    : null;
+  const actions = actionCopy[selectedLanguage];
+  const sentMessage = lastRequest ? actions.sentMessage[lastRequest.kind] : null;
   const selectedOption = requestOptions.find((option) => option.kind === selectedKind);
-  const readyToConfirm = Boolean(selectedOption && selectedLocation && visitorCount);
+  const readyToConfirm = Boolean(selectedOption || (selectedLocation && visitorCount));
+  const selectedLocationLabel =
+    selectedLocation && visitorCount ? `${selectedLocation} (${actions.visitorLabel[visitorCount]})` : null;
+  const selectedSummary =
+    selectedOption?.kind === "patient"
+      ? selectedLanguage === "english"
+        ? "Accompany"
+        : copy.options.patient.label
+      : selectedOption
+        ? copy.options[selectedOption.kind].label
+        : selectedLocationLabel;
 
   return (
     <main className="display-shell outside-display">
@@ -271,7 +357,7 @@ export default function OutsideDisplay() {
               <strong>{sentMessage}</strong>
               {lastRequest.status === "Waiting" ? (
                 <button className="cancel-request-action" onClick={cancelLastRequest} type="button">
-                  Cancel
+                  {actions.cancelButton}
                 </button>
               ) : (
                 <span className="cancelled-note">Cancelled</span>
@@ -285,7 +371,11 @@ export default function OutsideDisplay() {
             <GlassKeyButton
               className={`request-card ${option.kind}${selectedKind === option.kind ? " selected" : ""}`}
               key={option.kind}
-              onClick={() => setSelectedKind((currentKind) => (currentKind === option.kind ? null : option.kind))}
+              onClick={() => {
+                setSelectedKind((currentKind) => (currentKind === option.kind ? null : option.kind));
+                setSelectedLocation(null);
+                setVisitorCount(null);
+              }}
               showScene={false}
               tone={option.kind === "urgent" ? "red" : option.kind === "patient" ? "green" : "blue"}
             >
@@ -302,7 +392,9 @@ export default function OutsideDisplay() {
         <div className="outside-choice-panel" aria-label="Location and visitor count">
           {(["E2", "A11"] as ReceptionLocation[]).map((location) => (
             <div
-              className={selectedLocation === location ? "location-card active" : "location-card"}
+              className={
+                selectedLocation === location && visitorCount ? "location-card active" : "location-card"
+              }
               key={location}
             >
               <button
@@ -324,6 +416,7 @@ export default function OutsideDisplay() {
                     onClick={() => {
                       setSelectedLocation(location);
                       setVisitorCount(count);
+                      setSelectedKind(null);
                     }}
                     type="button"
                   >
@@ -341,27 +434,25 @@ export default function OutsideDisplay() {
         <div className="confirm-panel" aria-live="polite">
           <div>
             <strong>
-              {readyToConfirm && selectedOption && selectedLocation && visitorCount
-                ? `${copy.options[selectedOption.kind].label} - ${selectedLocation} - ${visitorCount} visitor${
-                    visitorCount > 1 ? "s" : ""
-                  }`
-                : "Select one request button, then press Confirm."}
+              {readyToConfirm && selectedSummary
+                ? selectedSummary
+                : actions.confirmInstruction}
             </strong>
           </div>
-          {lastRequest?.status === "Waiting" ? <div className="sent-badge">Send</div> : null}
+          {lastRequest?.status === "Waiting" ? <div className="sent-badge">{actions.sendBadge}</div> : null}
           <GlassKeyButton
             className={`confirm-request-action${selectedKind ? ` ${selectedKind}` : ""}${
-              selectedLocation ? " location-selected" : ""
+              selectedLocation && visitorCount ? " location-selected" : ""
             }`}
             disabled={!readyToConfirm}
             onClick={submitRequest}
             showScene={false}
             tone={selectedOption?.kind === "urgent" ? "red" : selectedOption?.kind === "patient" ? "green" : "blue"}
           >
-            Confirm
+            {actions.confirmButton}
           </GlassKeyButton>
           <button className="outside-cancel-action" onClick={resetOutsideSelection} type="button">
-            Cancel
+            {actions.cancelButton}
           </button>
         </div>
       </section>

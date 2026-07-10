@@ -3011,3 +3011,92 @@ h3 {
     rgba(255, 238, 128, 0.72);
   border-color: rgba(196, 145, 0, 0.32);
 }
+
+.ward-alert.location {
+  background:
+    linear-gradient(145deg, #fff8c7 0%, #fffdf0 58%, #ffd60a 100%),
+    #ffe16a;
+  border-color: rgba(196, 145, 0, 0.3);
+}
+
+.ward-display .queue-row.waiting.location {
+  background:
+    linear-gradient(145deg, #fff8c7 0%, #ffd60a 100%);
+}
+
+.ward-display .ward-alert.location .alert-meta span:first-child,
+.ward-display .ward-alert.location .status-pill {
+  background:
+    linear-gradient(145deg, #fffdf0 0%, #ffd60a 100%),
+    #ffe16a;
+  border-color: rgba(196, 145, 0, 0.32);
+  color: #4a3500;
+}
+
+.ward-display .ward-alert.location .primary-action {
+  background:
+    linear-gradient(145deg, #ffd60a 0%, #fff4a6 100%);
+  border-color: rgba(196, 145, 0, 0.36);
+}
+
+.ward-display .ward-alert.location .primary-action,
+.ward-display .ward-alert.location .primary-action .glass-key-content {
+  color: #1d1d1f;
+}
+
+.outside-preview-overlay {
+  background: rgba(17, 24, 39, 0.14);
+  backdrop-filter: blur(6px);
+  inset: 0;
+  pointer-events: none;
+  position: fixed;
+  z-index: 100;
+}
+
+.outside-preview-panel {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  border-radius: 30px;
+  box-shadow: 0 30px 90px rgba(15, 23, 42, 0.24);
+  height: calc(100svh - 36px);
+  overflow: hidden;
+  pointer-events: auto;
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  width: min(50vw, 760px);
+}
+
+.outside-preview-panel iframe {
+  background: #ffffff;
+  border: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.outside-preview-close {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(232, 237, 244, 0.8));
+  border: 1px solid rgba(120, 130, 145, 0.22);
+  border-radius: 999px;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.16);
+  color: #1d1d1f;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 900;
+  padding: 10px 16px;
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  z-index: 2;
+}
+
+@media (max-width: 900px) {
+  .outside-preview-panel {
+    height: 50svh;
+    left: 12px;
+    right: 12px;
+    top: 12px;
+    width: auto;
+  }
+}
