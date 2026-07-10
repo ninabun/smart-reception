@@ -304,7 +304,6 @@ export default function WardDisplay() {
             <>
               <p className="eyebrow">{copy.ready}</p>
               <h2>{copy.noActive}</h2>
-              <p>{copy.noActiveBody}</p>
             </>
           )}
         </div>
