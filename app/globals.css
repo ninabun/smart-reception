@@ -3185,7 +3185,8 @@ h3 {
   flex: 0 0 auto;
 }
 
-.ward-display .ward-alert.acknowledged {
+.ward-display .ward-alert.acknowledged,
+.ward-display .ward-alert.cancelled {
   background:
     radial-gradient(circle at 86% 8%, rgba(120, 130, 145, 0.14), transparent 34%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(239, 242, 246, 0.88));
@@ -3193,19 +3194,28 @@ h3 {
 }
 
 .ward-display .ward-alert.acknowledged h2,
-.ward-display .ward-alert.acknowledged p:not(.eyebrow) {
+.ward-display .ward-alert.acknowledged p:not(.eyebrow),
+.ward-display .ward-alert.cancelled h2,
+.ward-display .ward-alert.cancelled p:not(.eyebrow) {
   color: #4f5b67;
 }
 
-.ward-display .ward-alert.acknowledged .eyebrow {
+.ward-display .ward-alert.acknowledged .eyebrow,
+.ward-display .ward-alert.cancelled .eyebrow {
   color: #6b7280;
 }
 
 .ward-display .ward-alert.acknowledged .alert-meta span,
-.ward-display .ward-alert.acknowledged .status-pill {
+.ward-display .ward-alert.acknowledged .status-pill,
+.ward-display .ward-alert.cancelled .alert-meta span,
+.ward-display .ward-alert.cancelled .status-pill {
   background:
     linear-gradient(180deg, #ffffff 0%, #e5e9ef 100%);
   border-color: rgba(120, 130, 145, 0.22);
+  color: #4f5b67;
+}
+
+.ward-display .ward-alert.cancelled .cancelled-alert-note {
   color: #4f5b67;
 }
 
