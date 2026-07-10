@@ -1990,3 +1990,285 @@ h3 {
 .ward-display .glass-key-button.primary-action .glass-key-content {
   color: #5f6368;
 }
+
+/* Final iPad demo polish: stronger contrast, clearer grouping, and one-line ward controls. */
+.outside-display,
+.ward-display {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(0, 113, 227, 0.18), transparent 30%),
+    radial-gradient(circle at 88% 12%, rgba(255, 196, 0, 0.16), transparent 26%),
+    linear-gradient(180deg, #fbfbfd 0%, #f3f6fb 52%, #ffffff 100%);
+}
+
+.outside-display .display-topbar,
+.outside-display .visitor-copy,
+.ward-display .display-topbar,
+.ward-display .ward-alert,
+.ward-display .ward-sidebar {
+  border-color: rgba(255, 255, 255, 0.94);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 22px 70px rgba(15, 23, 42, 0.1);
+}
+
+.outside-display .display-topbar h1,
+.ward-display .display-topbar h1 {
+  color: #111827;
+  font-weight: 950;
+}
+
+.outside-display .visitor-copy {
+  display: grid;
+  gap: 14px;
+}
+
+.outside-choice-panel {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(247, 250, 255, 0.72)),
+    rgba(255, 255, 255, 0.76);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 26px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
+  padding: clamp(12px, 1.6vw, 18px);
+}
+
+.outside-display .language-row {
+  margin-bottom: 0;
+}
+
+.outside-display .language,
+.ward-display .language {
+  color: #293241;
+  font-weight: 900;
+}
+
+.outside-display .language.active,
+.ward-display .language.active {
+  background:
+    linear-gradient(180deg, #202124, #111827);
+  color: #ffffff;
+}
+
+.location-choice,
+.people-choice {
+  color: #172033;
+  min-height: 62px;
+}
+
+.location-choice.active,
+.people-choice.active {
+  background:
+    linear-gradient(145deg, #e8f3ff, #bcdcff),
+    #dbeeff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 14px 34px rgba(0, 113, 227, 0.16);
+  color: #064aa2;
+}
+
+.outside-display .request-grid.outside-grid {
+  gap: clamp(14px, 1.8vw, 22px);
+}
+
+.outside-display .glass-key-button.request-card {
+  border-radius: 26px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    inset 0 -16px 34px rgba(0, 0, 0, 0.08),
+    0 14px 0 rgba(15, 23, 42, 0.08),
+    0 30px 72px rgba(15, 23, 42, 0.14);
+}
+
+.outside-display .glass-key-button.request-card.general {
+  background:
+    linear-gradient(145deg, #1f8bf2 0%, #bfe7ff 52%, #2778df 100%);
+}
+
+.outside-display .glass-key-button.request-card.patient {
+  background:
+    linear-gradient(145deg, #49cad9 0%, #c8f6f8 52%, #1f9aa8 100%);
+}
+
+.outside-display .glass-key-button.request-card.urgent {
+  background:
+    linear-gradient(145deg, #ffd7e8 0%, #fff5fb 48%, #e78ab7 100%);
+}
+
+.outside-display .request-title {
+  color: #111827;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.32);
+}
+
+.outside-display .request-helper {
+  color: rgba(17, 24, 39, 0.82);
+  font-weight: 850;
+}
+
+.outside-display .visitor-confirmation.empty {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(247, 250, 255, 0.74)),
+    rgba(255, 255, 255, 0.78);
+}
+
+.ward-display .display-topbar {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.ward-display .topbar-actions {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 10px;
+  justify-content: flex-end;
+  max-width: none;
+}
+
+.ward-display .ward-language-row {
+  display: flex;
+  gap: 8px;
+  grid-template-columns: none;
+  justify-content: flex-end;
+}
+
+.ward-display .ward-language-row .language {
+  width: auto;
+}
+
+.ward-display .screen-link.outside-display-link {
+  align-items: center;
+  background:
+    linear-gradient(145deg, #ffe66d 0%, #ffc400 58%, #ffae00 100%);
+  border-color: rgba(169, 113, 0, 0.3);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    inset 0 -10px 22px rgba(120, 75, 0, 0.1),
+    0 12px 26px rgba(255, 179, 0, 0.24);
+  color: #2b2100;
+  font-weight: 950;
+  min-width: 190px;
+}
+
+.ward-display .ward-alert {
+  background:
+    radial-gradient(circle at 86% 8%, rgba(0, 113, 227, 0.12), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.82));
+}
+
+.ward-display .ward-alert.patient {
+  background:
+    radial-gradient(circle at 86% 8%, rgba(0, 164, 160, 0.16), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(244, 255, 253, 0.82));
+}
+
+.ward-display .ward-alert.urgent {
+  background:
+    radial-gradient(circle at 86% 8%, rgba(255, 68, 99, 0.18), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 247, 251, 0.86));
+}
+
+.ward-display .ward-alert h2,
+.ward-display .ward-alert p:not(.eyebrow) {
+  color: #172033;
+}
+
+.ward-display .alert-meta span:first-child,
+.ward-display .alert-meta span:last-child {
+  color: #172033;
+}
+
+.ward-display .metric {
+  min-height: 106px;
+}
+
+.ward-display .metric-today {
+  background:
+    linear-gradient(145deg, #e5f2ff 0%, #b9daff 100%);
+}
+
+.ward-display .metric-waiting {
+  background:
+    linear-gradient(145deg, #e8fff5 0%, #afe8cf 100%);
+}
+
+.ward-display .metric-high {
+  background:
+    linear-gradient(145deg, #fff0f5 0%, #ffc7d6 100%);
+}
+
+.ward-display .metric span,
+.ward-display .metric p,
+.ward-display .metric em {
+  color: #172033;
+}
+
+.ward-display .metric-high span,
+.ward-display .metric-high p,
+.ward-display .metric-high em {
+  color: #be2a2a;
+  font-weight: 950;
+}
+
+.ward-display .queue {
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.46);
+  padding: 10px 8px 10px 10px;
+}
+
+.ward-display .queue h3 {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  padding: 8px 10px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.ward-display .queue-row.waiting.general {
+  background: linear-gradient(145deg, #1f8bf2 0%, #bfe7ff 100%);
+}
+
+.ward-display .queue-row.waiting.patient {
+  background: linear-gradient(145deg, #49cad9 0%, #c8f6f8 100%);
+}
+
+.ward-display .queue-row.waiting.urgent {
+  background: linear-gradient(145deg, #ffd7e8 0%, #e78ab7 100%);
+}
+
+.ward-display .queue-row strong,
+.ward-display .queue-row span,
+.ward-display .queue-row small,
+.ward-display .queue-row em {
+  color: #172033;
+}
+
+.ward-display .queue-row.cancelled strong,
+.ward-display .queue-row.cancelled span,
+.ward-display .queue-row.cancelled small,
+.ward-display .queue-row.cancelled em,
+.ward-display .queue-row.acknowledged strong,
+.ward-display .queue-row.acknowledged span,
+.ward-display .queue-row.acknowledged small,
+.ward-display .queue-row.acknowledged em {
+  color: #5f6368;
+}
+
+.ward-display .primary-action {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(230, 236, 246, 0.72)),
+    rgba(239, 243, 248, 0.9);
+  border-color: rgba(120, 130, 145, 0.28);
+}
+
+@media (max-width: 980px) {
+  .ward-display .topbar-actions {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .ward-display .screen-link.outside-display-link {
+    min-width: 0;
+  }
+}
