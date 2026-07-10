@@ -6,6 +6,7 @@ import { filterTodayRequests, readRequests, saveRequests, type ReceptionRequest 
 import GlassKeyButton from "../components/GlassKeyButton";
 
 type WardLanguage = "english" | "chinese";
+type QueueFilter = "today" | "waiting" | "high";
 
 const wardCopy: Record<
   WardLanguage,
@@ -134,6 +135,7 @@ export default function WardDisplay() {
   const [requests, setRequests] = useState<ReceptionRequest[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<WardLanguage>("english");
   const [selectedRequestId, setSelectedRequestId] = useState<number | null>(null);
+  const [queueFilter, setQueueFilter] = useState<QueueFilter>("today");
 
   useEffect(() => {
     function refreshRequests() {
@@ -161,27 +163,38 @@ export default function WardDisplay() {
   );
   const copy = wardCopy[selectedLanguage];
   const hasWaitingRequests = waitingRequests.length > 0;
+  const queueRequests = useMemo(() => {
+    if (queueFilter === "waiting") {
+      return waitingRequests;
+    }
+
+    if (queueFilter === "high") {
+      return highPriorityRequests;
+    }
+
+    return todayRequests;
+  }, [highPriorityRequests, queueFilter, todayRequests, waitingRequests]);
   const selectedRequest = selectedRequestId
     ? todayRequests.find((request) => request.id === selectedRequestId)
     : null;
-  const activeRequest = selectedRequest ?? waitingRequests[0] ?? todayRequests[0];
+  const activeRequest = selectedRequest ?? queueRequests[0] ?? waitingRequests[0] ?? todayRequests[0];
 
   const metrics = useMemo(
     () => [
       {
-        id: "today",
+        id: "today" as const,
         label: copy.metrics.requestsToday,
         hint: copy.metrics.requestsTodayHint,
         value: String(todayRequests.length).padStart(2, "0")
       },
       {
-        id: "waiting",
+        id: "waiting" as const,
         label: copy.metrics.waiting,
         hint: copy.metrics.waitingHint,
         value: String(waitingRequests.length).padStart(2, "0")
       },
       {
-        id: "high",
+        id: "high" as const,
         label: copy.metrics.highPriority,
         hint: copy.metrics.highPriorityHint,
         value: String(highPriorityRequests.length).padStart(2, "0")
@@ -210,6 +223,7 @@ export default function WardDisplay() {
   function clearDemo() {
     setRequests([]);
     setSelectedRequestId(null);
+    setQueueFilter("today");
     saveRequests([]);
   }
 
@@ -269,7 +283,9 @@ export default function WardDisplay() {
               )}
               <div className="alert-meta">
                 <span>{activeRequest.createdAt}</span>
-                <span>{copy.status[activeRequest.status]}</span>
+                <span className={`status-pill status-${activeRequest.status.toLowerCase()}`}>
+                  {copy.status[activeRequest.status]}
+                </span>
               </div>
               {activeRequest.status === "Waiting" ? (
                 <GlassKeyButton
@@ -296,25 +312,30 @@ export default function WardDisplay() {
         <aside className="ward-sidebar">
           <div className="metric-grid">
             {metrics.map((metric) => (
-              <div
+              <button
                 className={`metric metric-${metric.id}${
                   metric.id === "high" ? " high-priority-metric" : ""
-                }`}
+                }${queueFilter === metric.id ? " active" : ""}`}
                 key={metric.id}
+                onClick={() => {
+                  setQueueFilter(metric.id);
+                  setSelectedRequestId(null);
+                }}
+                type="button"
               >
                 <span>{metric.value}</span>
                 <p>{metric.label}</p>
                 <em>{metric.hint}</em>
-              </div>
+              </button>
             ))}
           </div>
 
           <div className="queue">
             <h3>{copy.queue}</h3>
-            {todayRequests.length === 0 ? (
+            {queueRequests.length === 0 ? (
               <p className="muted">{copy.noEvents}</p>
             ) : (
-              todayRequests.map((request) => (
+              queueRequests.map((request) => (
                 <button
                   className={`queue-row ${request.kind} ${request.status.toLowerCase()}${
                     activeRequest?.id === request.id ? " selected" : ""
@@ -323,10 +344,10 @@ export default function WardDisplay() {
                   onClick={() => setSelectedRequestId(request.id)}
                   type="button"
                 >
-                  <span>{request.createdAt}</span>
-                  <strong>{copy.request[request.kind]}</strong>
-                  {requestMeta(request) ? <small>{requestMeta(request)}</small> : null}
-                  <em>
+                  <span className="queue-time">{request.createdAt}</span>
+                  <strong className="queue-title">{copy.request[request.kind]}</strong>
+                  {requestMeta(request) ? <small className="queue-meta">{requestMeta(request)}</small> : null}
+                  <em className="queue-status">
                     {copy.team[request.team] ?? request.team} - {copy.status[request.status]}
                     {request.status === "Acknowledged" && request.acknowledgedAt
                       ? ` (${request.acknowledgedAt})`

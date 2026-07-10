@@ -147,12 +147,19 @@ export default function OutsideDisplay() {
   const [lastRequest, setLastRequest] = useState<ReceptionRequest | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<ReceptionLocation>("E2");
   const [visitorCount, setVisitorCount] = useState<VisitorCount>(1);
+  const [selectedKind, setSelectedKind] = useState<ReceptionRequest["kind"] | null>(null);
 
   useEffect(() => {
     setRequests(readRequests());
   }, []);
 
-  function submitRequest(option: (typeof requestOptions)[number]) {
+  function submitRequest() {
+    const option = requestOptions.find((requestOption) => requestOption.kind === selectedKind);
+
+    if (!option) {
+      return;
+    }
+
     const nextRequest: ReceptionRequest = {
       id: Date.now(),
       kind: option.kind,
@@ -175,6 +182,7 @@ export default function OutsideDisplay() {
 
     setRequests(nextRequests);
     setLastRequest(nextRequest);
+    setSelectedKind(null);
     saveRequests(nextRequests);
   }
 
@@ -208,6 +216,7 @@ export default function OutsideDisplay() {
       ? "Urgent Alert Sent. Please wait."
       : "Enquiry Sent. Please wait."
     : null;
+  const selectedOption = requestOptions.find((option) => option.kind === selectedKind);
 
   return (
     <main className="display-shell outside-display">
@@ -252,43 +261,50 @@ export default function OutsideDisplay() {
         </div>
 
         <div className="outside-choice-panel" aria-label="Location and visitor count">
-          <div className="location-row">
-            {(["E2", "A11"] as ReceptionLocation[]).map((location) => (
-              <GlassKeyButton
-                className={selectedLocation === location ? "location-choice active" : "location-choice"}
-                key={location}
+          {(["E2", "A11"] as ReceptionLocation[]).map((location) => (
+            <div
+              className={selectedLocation === location ? "location-card active" : "location-card"}
+              key={location}
+            >
+              <button
+                className="location-card-title"
                 onClick={() => setSelectedLocation(location)}
-                showScene={false}
-                tone="neutral"
+                type="button"
               >
                 {location}
-              </GlassKeyButton>
-            ))}
-          </div>
-          <div className="people-row" aria-label={`${selectedLocation} visitor count`}>
-            {([1, 2] as VisitorCount[]).map((count) => (
-              <GlassKeyButton
-                className={visitorCount === count ? "people-choice active" : "people-choice"}
-                key={count}
-                onClick={() => setVisitorCount(count)}
-                showScene={false}
-                tone="neutral"
-              >
-                <span className={count === 1 ? "human-icon single" : "human-icon double"} aria-hidden="true">
-                  <i />
-                  {count === 2 ? <i /> : null}
-                </span>
-              </GlassKeyButton>
-            ))}
-          </div>
+              </button>
+              <div className="people-row" aria-label={`${location} visitor count`}>
+                {([1, 2] as VisitorCount[]).map((count) => (
+                  <button
+                    className={
+                      selectedLocation === location && visitorCount === count
+                        ? "people-choice active"
+                        : "people-choice"
+                    }
+                    key={count}
+                    onClick={() => {
+                      setSelectedLocation(location);
+                      setVisitorCount(count);
+                    }}
+                    type="button"
+                  >
+                    <span className={count === 1 ? "human-icon single" : "human-icon double"} aria-hidden="true">
+                      <i />
+                      {count === 2 ? <i /> : null}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
 
         <div className="request-grid outside-grid">
           {requestOptions.map((option) => (
             <GlassKeyButton
-              className={`request-card ${option.kind}`}
+              className={`request-card ${option.kind}${selectedKind === option.kind ? " selected" : ""}`}
               key={option.kind}
-              onClick={() => submitRequest(option)}
+              onClick={() => setSelectedKind(option.kind)}
               showScene={false}
               tone={option.kind === "urgent" ? "red" : option.kind === "patient" ? "green" : "blue"}
             >
@@ -296,6 +312,28 @@ export default function OutsideDisplay() {
               <span className="request-helper">{copy.options[option.kind].helper}</span>
             </GlassKeyButton>
           ))}
+        </div>
+
+        <div className="confirm-panel" aria-live="polite">
+          <div>
+            <span>{selectedOption ? "Ready to send" : "Choose enquiry type"}</span>
+            <strong>
+              {selectedOption
+                ? `${copy.options[selectedOption.kind].label} - ${selectedLocation} - ${visitorCount} visitor${
+                    visitorCount > 1 ? "s" : ""
+                  }`
+                : "Select one request button, then press Confirm."}
+            </strong>
+          </div>
+          <GlassKeyButton
+            className="confirm-request-action"
+            disabled={!selectedOption}
+            onClick={submitRequest}
+            showScene={false}
+            tone={selectedOption?.kind === "urgent" ? "red" : selectedOption?.kind === "patient" ? "green" : "blue"}
+          >
+            Confirm
+          </GlassKeyButton>
         </div>
       </section>
     </main>
