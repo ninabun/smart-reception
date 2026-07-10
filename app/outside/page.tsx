@@ -210,6 +210,17 @@ export default function OutsideDisplay() {
     saveRequests(nextRequests);
   }
 
+  function resetOutsideSelection() {
+    if (lastRequest?.status === "Waiting") {
+      cancelLastRequest();
+    }
+
+    setLastRequest(null);
+    setSelectedKind(null);
+    setSelectedLocation(null);
+    setVisitorCount(null);
+  }
+
   const copy = outsideCopy[selectedLanguage];
   const sentMessage = lastRequest
     ? lastRequest.kind === "urgent"
@@ -265,7 +276,11 @@ export default function OutsideDisplay() {
               showScene={false}
               tone={option.kind === "urgent" ? "red" : option.kind === "patient" ? "green" : "blue"}
             >
-              <span className="request-title">{copy.options[option.kind].label}</span>
+              <span className="request-title">
+                {selectedLanguage === "english" && option.kind === "patient"
+                  ? "Accompany"
+                  : copy.options[option.kind].label}
+              </span>
               <span className="request-helper">{copy.options[option.kind].helper}</span>
             </GlassKeyButton>
           ))}
@@ -320,9 +335,9 @@ export default function OutsideDisplay() {
                 : "Select one request button, then press Confirm."}
             </strong>
           </div>
-          {lastRequest?.status === "Waiting" ? <div className="sent-badge">Sent</div> : null}
+          {lastRequest?.status === "Waiting" ? <div className="sent-badge">Send</div> : null}
           <GlassKeyButton
-            className="confirm-request-action"
+            className={`confirm-request-action${selectedKind ? ` ${selectedKind}` : ""}`}
             disabled={!readyToConfirm}
             onClick={submitRequest}
             showScene={false}
@@ -330,6 +345,9 @@ export default function OutsideDisplay() {
           >
             Confirm
           </GlassKeyButton>
+          <button className="outside-cancel-action" onClick={resetOutsideSelection} type="button">
+            Cancel
+          </button>
         </div>
       </section>
     </main>
