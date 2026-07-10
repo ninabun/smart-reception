@@ -2702,3 +2702,38 @@ h3 {
   border-color: rgba(255, 214, 10, 0.4);
   color: #ffd60a;
 }
+
+.outside-display .display-topbar {
+  margin-bottom: clamp(10px, 1.4vw, 18px);
+  padding: clamp(14px, 1.8vw, 24px);
+}
+
+.outside-display .display-topbar .eyebrow {
+  font-size: clamp(0.62rem, 0.72vw, 0.78rem);
+  margin-bottom: 4px;
+}
+
+.outside-display .display-topbar h1 {
+  font-size: clamp(1.45rem, 2vw, 2.25rem);
+  line-height: 1.05;
+}
+
+.outside-display .visitor-layout {
+  gap: clamp(10px, 1.4vw, 18px);
+}
+
+.outside-display .visitor-copy {
+  min-height: 0;
+  padding: clamp(14px, 1.8vw, 22px);
+}
+
+.outside-display .language-row {
+  gap: clamp(8px, 1vw, 14px);
+}
+
+.outside-display .language {
+  font-size: clamp(1.15rem, 1.55vw, 1.55rem);
+  font-weight: 950;
+  min-height: clamp(58px, 6vw, 78px);
+  padding: 14px 18px;
+}
