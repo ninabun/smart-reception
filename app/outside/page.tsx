@@ -157,7 +157,7 @@ const actionCopy: Record<
     confirmInstruction: "Select one request button, then press Confirm.",
     confirmButton: "Confirm",
     cancelButton: "Cancel",
-    sendBadge: "Send",
+    sendBadge: "SENT",
     sentMessage: {
       general: "Enquiry Sent. Please wait.",
       patient: "Enquiry Sent. Please wait.",
@@ -310,6 +310,7 @@ export default function OutsideDisplay() {
     setSelectedLocation(location);
     setVisitorCount(null);
     setSelectedKind(null);
+    setLastRequest(null);
   }
 
   const copy = outsideCopy[selectedLanguage];
@@ -375,6 +376,7 @@ export default function OutsideDisplay() {
                 setSelectedKind((currentKind) => (currentKind === option.kind ? null : option.kind));
                 setSelectedLocation(null);
                 setVisitorCount(null);
+                setLastRequest(null);
               }}
               showScene={false}
               tone={option.kind === "urgent" ? "red" : option.kind === "patient" ? "green" : "blue"}
@@ -417,6 +419,7 @@ export default function OutsideDisplay() {
                       setSelectedLocation(location);
                       setVisitorCount(count);
                       setSelectedKind(null);
+                      setLastRequest(null);
                     }}
                     type="button"
                   >

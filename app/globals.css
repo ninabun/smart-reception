@@ -3100,3 +3100,73 @@ h3 {
     width: auto;
   }
 }
+
+.ward-display .topbar-actions {
+  align-items: center;
+  gap: clamp(22px, 3vw, 42px);
+}
+
+.ward-display .ward-language-row {
+  gap: 12px;
+}
+
+.ward-display .ward-language-row .language,
+.ward-display .screen-link.outside-display-link {
+  border-radius: 18px;
+  font-size: clamp(1.15rem, 1.6vw, 1.45rem);
+  font-weight: 950;
+  min-height: 72px;
+  min-width: 132px;
+  padding: 18px 24px;
+}
+
+.ward-display .screen-link.outside-display-link {
+  min-width: clamp(230px, 19vw, 310px);
+}
+
+.ward-display .metric-today,
+.ward-display .metric-waiting {
+  background:
+    linear-gradient(180deg, #ffffff 0%, #eef1f5 100%),
+    #f3f5f7;
+  border-color: rgba(120, 130, 145, 0.18);
+}
+
+.ward-display .metric-today span,
+.ward-display .metric-today p,
+.ward-display .metric-today em,
+.ward-display .metric-waiting span,
+.ward-display .metric-waiting p,
+.ward-display .metric-waiting em {
+  color: #1d1d1f;
+}
+
+.ward-display .metric-high {
+  background: #ffffff;
+  border-color: rgba(190, 42, 42, 0.18);
+}
+
+.ward-display .metric-high span {
+  color: #1d1d1f;
+}
+
+.ward-display .metric-high p,
+.ward-display .metric-high em {
+  color: #be2a2a;
+}
+
+.ward-sidebar {
+  min-height: calc(100svh - 176px);
+  overflow: hidden;
+}
+
+.ward-display .queue {
+  flex: 1 1 auto;
+  max-height: none;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.ward-display .queue-row {
+  flex: 0 0 auto;
+}

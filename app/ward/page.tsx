@@ -27,6 +27,13 @@ const wardCopy: Record<
     acknowledge: string;
     queue: string;
     noEvents: string;
+    instruction?: Record<ReceptionRequest["kind"], string>;
+    cancelledNote?: string;
+    requestTimeLabel?: string;
+    acknowledgeTimeLabel?: string;
+    mother?: string;
+    motherBaby?: string;
+    close?: string;
     status: Record<ReceptionRequest["status"], string>;
     team: Record<string, string>;
     request: Record<Exclude<ReceptionRequest["kind"], "location">, string>;
@@ -61,6 +68,18 @@ const wardCopy: Record<
     acknowledge: "Acknowledge Request",
     queue: "Live queue",
     noEvents: "No workflow events yet.",
+    instruction: {
+      general: "Notify Clerk.",
+      patient: "Notify Midwife.",
+      urgent: "Notify Healthcare Providers IMMEDIATELY.",
+      location: "Notify Clerk."
+    },
+    cancelledNote: "Request cancelled from outside panel.",
+    requestTimeLabel: "Request Time",
+    acknowledgeTimeLabel: "Acknowledge Time",
+    mother: "mother",
+    motherBaby: "mother & baby",
+    close: "Close",
     status: {
       Waiting: "Not yet acknowledged",
       Acknowledged: "Acknowledged",
@@ -130,6 +149,63 @@ const wardCopy: Record<
   }
 };
 
+const chineseWardCopy: (typeof wardCopy)["english"] = {
+  languageLabel: "中文",
+  eyebrow: "產房內顯示屏",
+  title: "位置：產房",
+  location: "位置：產房",
+  outsideDisplay: "開啟外面顯示屏",
+  resetDemo: "重設示範",
+  priority: {
+    Standard: "一般優先",
+    High: "高優先"
+  },
+  ready: "準備就緒",
+  noActive: "沒有待處理要求",
+  noActiveBody: "外面顯示屏送出的查詢會在這裡顯示。",
+  notify: "通知",
+  trigger: "啟動",
+  indicator: "指示燈",
+  play: "並播放",
+  acknowledge: "確認要求",
+  queue: "即時隊列",
+  noEvents: "暫時沒有記錄。",
+  instruction: {
+    general: "通知文員。",
+    patient: "通知助產士。",
+    urgent: "立即通知醫護人員。",
+    location: "通知文員。"
+  },
+  cancelledNote: "此要求已由外面顯示屏取消。",
+  requestTimeLabel: "要求時間",
+  acknowledgeTimeLabel: "確認時間",
+  mother: "媽媽",
+  motherBaby: "媽媽及嬰兒",
+  close: "關閉",
+  status: {
+    Waiting: "尚未確認",
+    Acknowledged: "已確認",
+    Cancelled: "已取消"
+  },
+  team: {
+    Clerk: "文員",
+    "Healthcare Provider": "醫護人員"
+  },
+  request: {
+    general: "一般查詢",
+    patient: "陪同",
+    urgent: "緊急協助"
+  },
+  metrics: {
+    requestsToday: "今日要求",
+    requestsTodayHint: "每日 0:00am 至 11:59pm",
+    waiting: "等待中",
+    waitingHint: "尚未確認",
+    highPriority: "高優先",
+    highPriorityHint: "外面顯示屏按下緊急協助"
+  }
+};
+
 export default function WardDisplay() {
   const [requests, setRequests] = useState<ReceptionRequest[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<WardLanguage>("english");
@@ -152,6 +228,18 @@ export default function WardDisplay() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!showOutsidePreview) {
+      return;
+    }
+
+    const refreshTimer = window.setInterval(() => {
+      setRequests(readRequests());
+    }, 700);
+
+    return () => window.clearInterval(refreshTimer);
+  }, [showOutsidePreview]);
+
   const todayRequests = useMemo(() => filterTodayRequests(requests), [requests]);
   const waitingRequests = useMemo(
     () => todayRequests.filter((request) => request.status === "Waiting"),
@@ -161,7 +249,7 @@ export default function WardDisplay() {
     () => todayRequests.filter((request) => request.kind === "urgent"),
     [todayRequests]
   );
-  const copy = wardCopy[selectedLanguage];
+  const copy = selectedLanguage === "chinese" ? chineseWardCopy : wardCopy.english;
   const hasWaitingRequests = waitingRequests.length > 0;
   const queueRequests = useMemo(() => {
     if (queueFilter === "waiting") {
@@ -236,10 +324,14 @@ export default function WardDisplay() {
       return "";
     }
 
-    return `${request.location} (${request.visitorCount === 1 ? "mother" : "mother & baby"})`;
+    return `${request.location} (${request.visitorCount === 1 ? copy.mother : copy.motherBaby})`;
   }
 
   function requestTitle(request: ReceptionRequest) {
+    if (request.kind === "location" && request.location && request.visitorCount) {
+      return `${request.location} (${request.visitorCount === 1 ? copy.mother : copy.motherBaby})`;
+    }
+
     return request.kind === "location" ? request.label : copy.request[request.kind];
   }
 
@@ -271,7 +363,7 @@ export default function WardDisplay() {
                 onClick={() => setSelectedLanguage(language)}
                 tone="neutral"
               >
-                {wardCopy[language].languageLabel}
+                {language === "chinese" ? chineseWardCopy.languageLabel : wardCopy[language].languageLabel}
               </GlassKeyButton>
             ))}
           </div>
@@ -297,13 +389,7 @@ export default function WardDisplay() {
                 {copy.priority[activeRequest.priority]}
               </p>
               <h2>{requestTitle(activeRequest)}</h2>
-              {activeRequest.kind === "urgent" ? (
-                <p>Notify Healthcare Providers IMMEDIATELY.</p>
-              ) : activeRequest.kind === "patient" ? (
-                <p>Notify Midwife.</p>
-              ) : (
-                <p>Notify Clerk.</p>
-              )}
+              <p>{copy.instruction?.[activeRequest.kind]}</p>
               <div className="alert-meta">
                 <span>{activeRequest.createdAt}</span>
                 <span className={`status-pill status-${activeRequest.status.toLowerCase()}`}>
@@ -320,7 +406,7 @@ export default function WardDisplay() {
                 </GlassKeyButton>
               ) : null}
               {activeRequest.status === "Cancelled" ? (
-                <p className="cancelled-alert-note">Request cancelled from outside panel.</p>
+                <p className="cancelled-alert-note">{copy.cancelledNote}</p>
               ) : null}
             </>
           ) : (
@@ -366,11 +452,15 @@ export default function WardDisplay() {
                   onClick={() => setSelectedRequestId(request.id)}
                   type="button"
                 >
-                  <span className="queue-time">{request.createdAt} (Request Time)</span>
+                  <span className="queue-time">
+                    {request.createdAt} ({copy.requestTimeLabel})
+                  </span>
                   <strong className="queue-title">
                     {requestTitle(request)}
                     {request.status === "Acknowledged" && request.acknowledgedAt ? (
-                      <span className="queue-ack-time">{request.acknowledgedAt} (Acknowledge Time)</span>
+                      <span className="queue-ack-time">
+                        {request.acknowledgedAt} ({copy.acknowledgeTimeLabel})
+                      </span>
                     ) : null}
                   </strong>
                   {requestMeta(request) ? <small className="queue-meta">{requestMeta(request)}</small> : null}
@@ -403,7 +493,7 @@ export default function WardDisplay() {
               onClick={() => setShowOutsidePreview(false)}
               type="button"
             >
-              Close
+              {copy.close}
             </button>
             <iframe src="/outside" title={copy.outsideDisplay} />
           </div>
