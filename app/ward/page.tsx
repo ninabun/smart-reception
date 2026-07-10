@@ -378,7 +378,13 @@ export default function WardDisplay() {
       </header>
 
       <section className="ward-layout">
-        <div className={activeRequest ? `ward-alert ${activeRequest.kind}` : "ward-alert empty"}>
+        <div
+          className={
+            activeRequest
+              ? `ward-alert ${activeRequest.kind} ${activeRequest.status.toLowerCase()}`
+              : "ward-alert empty"
+          }
+        >
           <span
             aria-label={hasWaitingRequests ? "Unacknowledged request light on" : "Request light off"}
             className={hasWaitingRequests ? `beacon ${activeRequest?.kind ?? ""} on` : "beacon off"}

@@ -3170,3 +3170,41 @@ h3 {
 .ward-display .queue-row {
   flex: 0 0 auto;
 }
+
+.outside-display .confirm-panel {
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+}
+
+.outside-display .sent-badge {
+  justify-self: end;
+  min-width: max-content;
+}
+
+.outside-display .confirm-request-action,
+.outside-display .outside-cancel-action {
+  flex: 0 0 auto;
+}
+
+.ward-display .ward-alert.acknowledged {
+  background:
+    radial-gradient(circle at 86% 8%, rgba(120, 130, 145, 0.14), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(239, 242, 246, 0.88));
+  border-color: rgba(120, 130, 145, 0.22);
+}
+
+.ward-display .ward-alert.acknowledged h2,
+.ward-display .ward-alert.acknowledged p:not(.eyebrow) {
+  color: #4f5b67;
+}
+
+.ward-display .ward-alert.acknowledged .eyebrow {
+  color: #6b7280;
+}
+
+.ward-display .ward-alert.acknowledged .alert-meta span,
+.ward-display .ward-alert.acknowledged .status-pill {
+  background:
+    linear-gradient(180deg, #ffffff 0%, #e5e9ef 100%);
+  border-color: rgba(120, 130, 145, 0.22);
+  color: #4f5b67;
+}
