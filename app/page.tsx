@@ -1,23 +1,34 @@
-import Link from "next/link";
-
 export default function Home() {
   return (
-    <main className="display-shell demo-home">
-      <section className="demo-home-panel">
-        <p className="eyebrow">Smart Labour Room Reception Demo</p>
-        <h1>Choose the display to open</h1>
-        <p>
-          Use two browser windows or two devices: one outside the ward for visitors, and one inside
-          the ward for staff alerts.
-        </p>
-        <div className="demo-actions">
-          <Link className="primary-link" href="/outside">
-            Outside Ward Display
-          </Link>
-          <Link className="primary-link ward" href="/ward">
-            Inside Ward Display
-          </Link>
+    <main className="combined-demo-shell">
+      <header className="combined-demo-header">
+        <div>
+          <p className="eyebrow">Smart Labour Room Reception Demo</p>
+          <h1>Labour Room Reception Console</h1>
         </div>
+        <p>Outside visitor panel and inside ward panel are grouped into one webpage for demo use.</p>
+      </header>
+
+      <section className="combined-panel-grid" aria-label="Smart reception dual display demo">
+        <article className="combined-panel-card">
+          <div className="combined-panel-title">
+            <span>Outside Ward Display</span>
+            <a href="/outside" target="_blank" rel="noreferrer">
+              Open
+            </a>
+          </div>
+          <iframe src="/outside" title="Outside Ward Display" />
+        </article>
+
+        <article className="combined-panel-card">
+          <div className="combined-panel-title">
+            <span>Inside Ward Display</span>
+            <a href="/ward" target="_blank" rel="noreferrer">
+              Open
+            </a>
+          </div>
+          <iframe src="/ward" title="Inside Ward Display" />
+        </article>
       </section>
     </main>
   );
