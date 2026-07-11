@@ -6,7 +6,6 @@ export default function Home() {
           <p className="eyebrow">Smart Labour Room Reception Demo</p>
           <h1>Labour Room Reception Console</h1>
         </div>
-        <p>Outside visitor panel and inside ward panel are grouped into one webpage for demo use.</p>
       </header>
 
       <section className="combined-panel-grid" aria-label="Smart reception dual display demo">
